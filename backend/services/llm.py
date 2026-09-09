@@ -111,8 +111,9 @@ _TONE = {
 }
 
 
-def enhance_script(requirement, strategy, speech_style="unknown"):
-    """快层：生成/润色话术与结论。返回 dict 或 None（脱敏：不传人名）。"""
+def enhance_script(requirement, strategy, speech_style="unknown", context=None):
+    """快层：生成/润色话术与结论。返回 dict 或 None（脱敏：不传人名）。
+    context: 个人上下文（负载/关系记忆）——免费话术给不了的差异化输入。"""
     user = ("需求原文：{0}\n已选打法：{1}\n对象沟通风格：{2}".format(
         requirement.get("raw_text", ""),
         strategy.get("tactic_name", ""),
@@ -120,6 +121,12 @@ def enhance_script(requirement, strategy, speech_style="unknown"):
     tone = _TONE.get(speech_style)
     if tone:
         user += "\n对方语言风格偏好：" + tone
+    if context:
+        user += ("\n你的个人上下文（可自然引用以增强说服力，保持克制）：本周已排 {c} 小时、"
+                 "剩余 {r} 小时；这是该提出人本周第 {n} 次加活。").format(
+                     c=context.get("weekly_committed", "?"),
+                     r=context.get("remaining", "?"),
+                     n=context.get("person_week_count", 1))
     return fast_json(_SCRIPT_SYSTEM, user, max_tokens=300)
 
 

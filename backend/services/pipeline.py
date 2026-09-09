@@ -49,6 +49,9 @@ def process(requirement_id, use_llm=False):
             raise KeyError("requirement not found: " + requirement_id)
         baselines = [dict(b) for b in con.execute(
             "SELECT * FROM baseline_item WHERE project_id = ?", (row["project_id"],)).fetchall()]
+        person_count = con.execute(
+            "SELECT COUNT(*) FROM requirement WHERE person_id=? AND id != ?",
+            (row["person_id"], requirement_id)).fetchone()[0] + 1
     finally:
         con.close()
 
@@ -64,7 +67,10 @@ def process(requirement_id, use_llm=False):
                    row["comm_style"] or "low", kick_ball=kick_ball)
     if use_llm:
         from services import llm
-        enh = llm.enhance_script(dict(row), scr, row["speech_style"] or "unknown")
+        # 差异化上下文：负载 + 关系记忆（免费话术给不了的输入）
+        context = {"weekly_committed": 32, "remaining": 8,
+                   "person_week_count": person_count}
+        enh = llm.enhance_script(dict(row), scr, row["speech_style"] or "unknown", context)
         if enh and enh.get("text"):
             scr = dict(scr)
             scr["text"] = enh["text"]

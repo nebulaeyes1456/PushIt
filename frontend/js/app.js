@@ -92,6 +92,10 @@ function mockProcess(text, personName, source) {
 }
 
 /* ---------- 渲染：报告卡 ---------- */
+function countThisWeek(person) {
+  return reqs.filter(function (x) { return x.person === person; }).length + 1;
+}
+
 function renderReport(r) {
   var card = $("report-card");
   card.classList.remove("hidden");
@@ -101,6 +105,7 @@ function renderReport(r) {
     '<div class="item-text">' + ESC(r.text) + "</div>" +
     (r.kickBall ? '<div class="rep warnline">⚠ 疑似皮球（无前置、无信息）——已切换“把球送回去”打法（§6.10）</div>' : "") +
     '<div class="meta">提出人 ' + ESC(r.person) + "（" + ESC(r.role) + "） · 来源 " + ESC(r.source) + " · 动机：" + ESC(r.motivationLabel) + "</div>" +
+    '<div class="mini" style="color:#8a7f6b">📒 基于你的账本生成：本周已排 32h · 这是 ' + ESC(r.person) + ' 本周第 ' + countThisWeek(r.person) + ' 次加活</div>' +
     '<div class="rep"><b>代价（保守区间）</b>：' + r.low + " ~ " + r.high + " 小时 · 复杂度系数 " + r.scale + "</div>" +
     '<div class="rep"><b>风险</b>：' + risk + (r.overload ? '　<span class="warnline">⚠ 已超本周容量，硬上会挤掉既有承诺</span>' : "") + "</div>" +
     '<h3>建议打法：' + ESC(r.tacticName) + "</h3>" +
@@ -125,6 +130,13 @@ function nextId() { return "R" + Math.random().toString(36).slice(2, 7); }
 function addReq(r) {
   var it = { id: nextId(), text: r.text || "", person: r.person, source: r.source, status: "pending", low: r.low, high: r.high, scale: r.scale, at: new Date().toLocaleString().slice(5, 16), motivation: r.motivation, log: [{ at: new Date().toLocaleString().slice(5, 16), act: "记入台账" }] };
   reqs.unshift(it); saveReqs(); renderAll();
+  try {
+    if (!localStorage.getItem("pushit_aha")) {
+      localStorage.setItem("pushit_aha", "1");
+      var h = $("hint-line");
+      if (h) h.textContent = "这就是差异：免费内容给你一句话，PushIt 给你一本账——上面这条已留痕，可随时导出为证据。";
+    }
+  } catch (e) {}
   return it;
 }
 function onAction(doWhat, r) {
@@ -234,11 +246,15 @@ function renderPersonRows(rows) {
 }
 
 function renderMe() {
-  var won = 0, debtN = 0;
+  var won = 0, debtN = 0, flowN = 0;
   reqs.forEach(function (it) {
     if (it.status === "declined") won += it.low;
     if (it.handed) debtN += 1;
+    flowN += (it.log || []).length;
   });
+  $("mem-reqs").textContent = reqs.length + " 条";
+  $("mem-flow").textContent = flowN + " 次";
+  $("mem-won").textContent = "+" + (Math.round(won * 10) / 10) + "h";
   var debt = debtN * 6, net = Math.round((won - debt) * 10) / 10;
   won = Math.round(won * 10) / 10;
   $("me-won").textContent = "+" + won + "h";
