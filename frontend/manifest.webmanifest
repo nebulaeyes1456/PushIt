@@ -1,0 +1,11 @@
+{
+  "name": "PushIt · 排期与需求小账本",
+  "short_name": "PushIt",
+  "description": "把领导一句话加活翻译成代价账，让不合理需求自己现形。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f3ef",
+  "theme_color": "#b3422d",
+  "lang": "zh-CN"
+}

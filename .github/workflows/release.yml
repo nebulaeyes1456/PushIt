@@ -1,0 +1,38 @@
+name: Build Windows Release（电脑版）
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装依赖
+        run: pip install fastapi uvicorn pyinstaller
+      - name: 打包 exe
+        shell: pwsh
+        run: |
+          pyinstaller --noconfirm --onefile --name "PushIt" --paths . --distpath . --workpath build --specpath build `
+            --hidden-import uvicorn.logging --hidden-import uvicorn.loops.auto `
+            --hidden-import uvicorn.protocols.http.auto --hidden-import uvicorn.protocols.websockets.auto `
+            --hidden-import uvicorn.lifespan.on `
+            --add-data "frontend;frontend" --add-data "backend;backend" --add-data "scripts;scripts" `
+            --add-data "data\strategy_lib.json;data" "scripts\desktop_launcher.py"
+      - name: 组装安装包
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist-release | Out-Null
+          Copy-Item PushIt.exe dist-release\
+          Copy-Item "release\PushIt-电脑版-安装教程.txt" dist-release\
+          Compress-Archive -Path dist-release\* -DestinationPath PushIt-电脑版-安装包.zip
+      - name: 发布 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: PushIt-电脑版-安装包.zip
+          generate_release_notes: true

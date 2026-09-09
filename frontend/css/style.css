@@ -1,0 +1,99 @@
+/* PushIt 前端样式：移动优先，三端响应式（§9：手机优先、桌面居中留白） */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg:#f4f3ef; --card:#fffdf8; --ink:#2c2417; --sub:#8a7f6b;
+  --line:#e7e1d4; --brand:#b3422d; --ok:#2f7d5c; --warn:#c98a1b;
+  --bad:#c53030; --rad:14px;
+}
+html,body { margin:0; padding:0; background:var(--bg); color:var(--ink);
+  font:15px/1.5 -apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; }
+.app { max-width:600px; margin:0 auto; padding:12px 12px 84px; }
+
+/* header：低调形态（§14 副标用中性"小账本"） */
+.top { position:sticky; top:0; z-index:30; background:var(--card);
+  border-bottom:1px solid var(--line); padding:10px 14px; }
+.brand { font-weight:800; font-size:18px; letter-spacing:.5px; }
+.brand .sub { font-weight:400; font-size:12px; color:var(--sub); margin-left:8px; }
+
+.card { background:var(--card); border:1px solid var(--line); border-radius:var(--rad);
+  padding:14px; margin:12px 0; box-shadow:0 1px 2px rgba(0,0,0,.03); }
+.card h2 { margin:0 0 10px; font-size:15px; }
+
+textarea, select, button { font:inherit; }
+textarea { width:100%; border:1px solid var(--line); border-radius:10px; padding:10px;
+  resize:vertical; background:#fff; }
+.row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:8px; }
+select { flex:1; min-width:120px; padding:8px; border:1px solid var(--line);
+  border-radius:10px; background:#fff; }
+button { padding:8px 14px; border-radius:10px; border:1px solid var(--line);
+  background:#fff; cursor:pointer; }
+button.primary { background:var(--brand); color:#fff; border-color:var(--brand); }
+button.ghost { color:var(--sub); }
+.chk { display:flex; align-items:center; gap:6px; font-size:13px; }
+.hint { color:var(--sub); font-size:12px; margin:8px 0 0; }
+.hidden { display:none !important; }
+
+/* 徽标 */
+.badge { display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px; }
+.badge.decline { background:#fdeaea; color:var(--bad); }
+.badge.accept { background:#e6f2ec; color:var(--ok); }
+.badge.pending { background:#fdf3df; color:var(--warn); }
+.badge.done { background:#eee; color:var(--sub); }
+
+/* 报告卡 */
+#report-card h3 { margin:0 0 6px; font-size:16px; }
+.meta { color:var(--sub); font-size:12px; margin-bottom:10px; }
+.script { background:#fbf5ea; border:1px dashed #d8c7a6; border-radius:10px;
+  padding:12px; font-size:16px; line-height:1.6; margin:10px 0; }
+.script small { display:block; color:var(--sub); font-size:12px; margin-top:6px; }
+.rep { font-size:13px; margin:6px 0; }
+.rep b { color:var(--bad); }
+.okline { color:var(--ok); } .warnline { color:var(--warn); }
+.actions { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+
+/* Tabs（底部固定，手机优先） */
+.tabs { position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex;
+  background:var(--card); border-top:1px solid var(--line); padding:6px 0;
+  padding-bottom:calc(6px + env(safe-area-inset-bottom)); }
+.tabs button { flex:1; border:none; background:none; color:var(--sub); font-weight:600; }
+.tabs button.on { color:var(--brand); }
+.view { display:none; }
+.view.on { display:block; }
+
+.list { list-style:none; margin:0; padding:0; }
+.list li { padding:10px 0; border-bottom:1px solid var(--line); }
+.list li:last-child { border-bottom:none; }
+.item-top { display:flex; justify-content:space-between; gap:8px; }
+.item-text { margin:4px 0; }
+.item-meta { color:var(--sub); font-size:12px; }
+.mini { font-size:12px; }
+
+/* 负载条 */
+.gauge { height:14px; border-radius:8px; background:#e9e4d6; overflow:hidden; margin:6px 0 12px; }
+.gauge .fill { height:100%; width:0; background:var(--brand); transition:width .3s; }
+.kv { display:flex; justify-content:space-between; padding:4px 0; font-size:13px; }
+.kv b { font-weight:700; }
+
+.debt-bar { background:#fdf3df; border:1px solid #ecd49b; color:#8a5a00;
+  border-radius:10px; padding:8px 12px; margin:12px 0; font-size:13px; }
+canvas { width:100%; max-width:100%; background:#fffdf8; border:1px solid var(--line);
+  border-radius:10px; }
+.empty { color:var(--sub); text-align:center; font-size:13px; }
+
+/* 桌面端留白居中 */
+@media (min-width:768px) { body { background:#eceae3; } }
+
+/* 提醒条 / 预演聊天 / 预案 */
+#day-bar { border-left:3px solid var(--warn); }
+input[type="text"], #rehearse-line { flex:1; min-width:140px; padding:8px;
+  border:1px solid var(--line); border-radius:10px; }
+.chat { max-height:340px; overflow:auto; display:flex; flex-direction:column;
+  gap:8px; margin:8px 0; }
+.bubble { max-width:80%; padding:8px 12px; border-radius:12px; font-size:14px;
+  white-space:pre-wrap; }
+.bubble.me { align-self:flex-end; background:var(--brand); color:#fff; }
+.bubble.them { align-self:flex-start; background:#efe9dc; }
+.plan { background:#f7f3e8; border-radius:10px; padding:8px 10px; margin-top:6px;
+  font-size:13px; }
+.plan div { padding:3px 0; border-bottom:1px dashed #e3d9bf; }
+.plan div:last-child { border-bottom:none; }

@@ -1,0 +1,17 @@
+# PushIt 忽略清单
+# 运行时产物
+data/*.db
+# 密钥与本地配置（切勿提交）
+data/llm_config.json
+# Python
+.venv/
+__pycache__/
+*.pyc
+# 构建产物
+build/
+*.spec
+PushIt.exe
+# 交付包（不入库，由 Actions 重新生成 / 本地生成）
+release/*.zip
+# 前端构建产物（将来）
+frontend/dist/

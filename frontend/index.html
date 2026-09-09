@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b3422d'/%3E%3Ctext x='32' y='42' font-size='32' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3EP%3C/text%3E%3C/svg%3E">
+<title>PushIt · 排期与需求小账本</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">PushIt<span class="sub">排期 · 需求小账本</span></div>
+</header>
+
+<main class="app">
+
+  <!-- 打开时被动提醒（M3 激活层） -->
+  <section class="card hidden" id="day-bar">
+    <div id="day-bar-text"></div>
+    <div class="actions"><button class="primary" id="btn-align">生成对齐记录</button></div>
+  </section>
+
+  <!-- 输入卡（主入口：把消息贴进来） -->
+  <section class="card" id="input-card">
+    <h2>这周又加了什么活？</h2>
+    <textarea id="in-text" rows="3" placeholder="把领导/同事的话贴进来，例如：顺手把报表导出权限也开了，这周一起上"></textarea>
+    <div class="row">
+      <select id="in-person" aria-label="提出人">
+        <option value="王组长|mid|high">王组长（中层）</option>
+        <option value="赵总|boss|high">赵总（大老板）</option>
+        <option value="小李|peer|low">小李（平级转达）</option>
+      </select>
+      <select id="in-source" aria-label="来源">
+        <option>口头</option><option>消息</option><option>会议</option><option>1:1</option>
+      </select>
+    </div>
+    <div class="row">
+      <label class="chk"><input type="checkbox" id="in-auto" checked> 自动判断「该接 or 该拒」</label>
+      <button id="btn-example" type="button" class="ghost">填个例子</button>
+      <button id="btn-process" type="button" class="primary">处理这件活</button>
+    </div>
+    <p class="hint" id="hint-line">主入口 = 粘贴消息（§5.0：语音仅私密时刻）；结果按「先明确、后台阶」生成。</p>
+  </section>
+
+  <!-- 处理结果报告 -->
+  <section class="card hidden" id="report-card"></section>
+
+  <!-- Tab 导航 -->
+  <nav class="tabs" id="tabs">
+    <button data-view="ledger" class="on">台账</button>
+    <button data-view="load">负载</button>
+    <button data-view="rel">关系</button>
+    <button data-view="rehearse">预演</button>
+    <button data-view="me">我</button>
+  </nav>
+
+  <section id="view-ledger" class="view on">
+    <div class="debt-bar hidden" id="debt-bar"></div>
+    <ul class="list" id="ledger-list"></ul>
+    <p class="empty" id="ledger-empty">还没有记录。贴一条上面的活，点「处理这件活」。</p>
+  </section>
+
+  <section id="view-load" class="view">
+    <div class="card">
+      <h2>承诺 vs 新增</h2>
+      <div class="gauge"><div class="fill" id="gauge-fill"></div></div>
+      <div class="kv"><span>本周已排（承诺基线）</span><b id="load-committed">–</b></div>
+      <div class="kv"><span>待办新增（低-高）</span><b id="load-new">–</b></div>
+      <div class="kv"><span>是否超载</span><b id="load-over">–</b></div>
+    </div>
+    <div class="card">
+      <h2>季度承诺基线</h2>
+      <ul class="list" id="baseline-list"></ul>
+    </div>
+  </section>
+
+  <section id="view-rel" class="view">
+    <div class="card">
+      <h2>提出人画像</h2>
+      <ul class="list" id="person-list"></ul>
+      <p class="hint">画像仅本地、主观笔记（§15）；转嫁计数用于「拒绝债」自监测（§6.9）。</p>
+    </div>
+  </section>
+
+  <section id="view-rehearse" class="view">
+    <div class="card">
+      <h2>模拟预演 · AI 扮演对方</h2>
+      <div class="row">
+        <select id="rehearse-person" aria-label="预演对象">
+          <option>王组长</option>
+          <option>赵总</option>
+          <option>小李</option>
+        </select>
+      </div>
+      <div class="chat" id="chat-box"></div>
+      <div class="row">
+        <input type="text" id="rehearse-line" placeholder="你准备怎么说？">
+        <button class="primary" id="btn-rehearse">对方怎么回？</button>
+      </div>
+      <p class="hint">先在这练一遍，再上真实战场（§5 机制 6）。无后端/无 key 时用规则模板回应。</p>
+    </div>
+  </section>
+
+  <section id="view-me" class="view">
+    <div class="card">
+      <h2>时间复利 · 净账</h2>
+      <canvas id="curve" width="300" height="90"></canvas>
+      <div class="kv"><span>累计赢回（挡掉）</span><b id="me-won">–</b></div>
+      <div class="kv"><span>转嫁给同事（欠账）</span><b id="me-debt">–</b></div>
+      <div class="kv"><span>净账</span><b id="me-net">–</b></div>
+      <p class="hint">只算赢回不算转嫁 = 自我感觉良好（§6.9）。</p>
+    </div>
+    <div class="card">
+      <h2>设置与数据（§15）</h2>
+      <div class="row">
+        <label class="chk"><input type="checkbox" id="opt-llm" checked> AI 增强（DeepSeek，仅 ?api=1 模式生效）</label>
+      </div>
+      <div class="row">
+        <input type="text" id="opt-api-base" placeholder="后端地址（默认 http://127.0.0.1:8765/api/v1）">
+        <button id="btn-save-api">保存后端地址</button>
+      </div>
+      <div class="actions">
+        <button id="btn-summary">生成本周 1:1 摘要</button>
+        <button id="btn-export">导出全部数据</button>
+        <button id="btn-wipe">清空本地数据</button>
+      </div>
+      <p class="hint">数据默认纯本地；导出 = 数据主权，清空 = 彻底删除（双向都给）。</p>
+    </div>
+  </section>
+
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>

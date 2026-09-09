@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "product": "PushIt（推它）",
+    "name": "strategy_lib",
+    "version": "0.1.0",
+    "desc": "策略知识库 v0.1（B 线 T4 交付）。来源：项目书 §2.3 动机决策树 + §4.1 汉弗莱式手段（全部原创改写，不照搬影视对白）+ §6 第 7/8/9 条护栏。供 C 线话术生成与 A 线估算前置判断消费。",
+    "note": "所有 example 均为原创中文职场话术，可直接念；遵循“先明确、后台阶”顺序铁律与归因外置。"
+  },
+
+  "motivations": [
+    {
+      "id": "boss_press",
+      "label": "大老板拍板 / 中层转压",
+      "signs": ["提到是上面要的", "deadline 来自更上层", "中层只是传话且自己没把握"],
+      "yield": "high",
+      "play": "向上溯源",
+      "anchor": "把风险讲到“他如何向大老板交代”的层面，他会主动帮你卸"
+    },
+    {
+      "id": "self_achievement",
+      "label": "中层自己要业绩 / 拍脑袋",
+      "signs": ["临时起意", "没有业务方背书", "最怕项目出事砸招牌"],
+      "yield": "high",
+      "play": "代价回流",
+      "anchor": "坚持会导致延期/风险，而向上面解释的人是他"
+    },
+    {
+      "id": "relay",
+      "label": "帮同事 / 别组转达",
+      "signs": ["口头转述他人诉求", "非本人利益", "可退让性最高"],
+      "yield": "highest",
+      "play": "中性动作（首选练手对象）",
+      "anchor": "不在已对齐的承诺里，先对齐优先级（§5 脚手架首单）"
+    },
+    {
+      "id": "growth",
+      "label": "成长型 / 核心 / 该接",
+      "signs": ["高价值", "成长机会", "老板亲抓", "团队关键路径"],
+      "yield": "accept",
+      "play": "该接就接（§6.7）",
+      "anchor": "识别该接的活，漂亮地接并保住承诺，而非一律拒"
+    }
+  ],
+
+  "tactics": [
+    {
+      "id": "escalate_simple",
+      "name": "把简单事讲复杂（讲清真实复杂度）",
+      "when": ["self_achievement", "boss_press"],
+      "product_form": "代价估算 + 风险/技术债标注",
+      "example": "这看着小，实际牵扯老模块的权限口径，返工风险偏高；这周排的话我只能保证到 X，Y 需要挪后。您看是按这个范围走，还是先只做 X？",
+      "clarify_dial": ["low", "high"],
+      "guardrails": ["attribution", "clarity_conclusion_first"]
+    },
+    {
+      "id": "agree_then_cost",
+      "name": "先热情同意、再列尴尬后果",
+      "when": ["self_achievement", "boss_press"],
+      "product_form": "代价报告 + 取舍方案",
+      "example": "没问题，可以做——只是这周硬上，演示会那场大概率要黄。为了不让您到时候难交代，我建议把演示会保住，这个挪到下周二，可以吗？",
+      "clarify_dial": ["high"],
+      "guardrails": ["clarity_conclusion_first", "give_face"]
+    },
+    {
+      "id": "proceduralize",
+      "name": "把决定升级成流程",
+      "when": ["relay", "self_achievement"],
+      "product_form": "“记入排期会”动作",
+      "example": "这个我记下了，先不进本周承诺；下周二排期会我们一起过优先级再定，会上我会把它和现有 3 件事的冲突摆出来。",
+      "clarify_dial": ["low", "high"],
+      "guardrails": ["written_receipt"]
+    },
+    {
+      "id": "mirror_up",
+      "name": "用他的逻辑反制（向上溯源）",
+      "when": ["boss_press"],
+      "product_form": "向上溯源话术",
+      "example": "若这周做砸了，您跟上面汇报时最不好交代的是哪一条？我的判断是演示会这条；所以我的建议是先保它。",
+      "clarify_dial": ["high"],
+      "guardrails": ["attribution", "let_him_conclude"]
+    },
+    {
+      "id": "two_options",
+      "name": "给两个你能接受的选项",
+      "when": ["self_achievement", "relay", "boss_press"],
+      "product_form": "方案 A/B 生成",
+      "example": "两种走法：要快而糙，周五给你一版能看的；要全而稳，下周三给你，同时把市场部那条挤出去。您选哪个？",
+      "clarify_dial": ["low", "high"],
+      "guardrails": ["give_face", "his_kpi_options"]
+    },
+    {
+      "id": "return_to_decision",
+      "name": "把任务送回正确决策层（防转嫁同事）",
+      "when": ["self_achievement", "boss_press"],
+      "product_form": "转派避坑交接 + 代价账上抛（§6.9）",
+      "example": "这活不是不能做，是需要 X 前提；不论最后谁做，我都建议先对齐口径——我把已知风险、依赖和别踩的坑都写进交接备注了，谁接都能少踩雷。",
+      "clarify_dial": ["low", "high"],
+      "guardrails": ["reject_debt", "handoff_note"]
+    },
+    {
+      "id": "accept_pretty",
+      "name": "漂亮地接（该接就接分支，§6.7）",
+      "when": ["growth"],
+      "product_form": "“接但换资源/排期”话术",
+      "example": "这个对我有挑战，我接——但我需要把 X 挪后两周，才能把它做扎实。您看是挪 X，还是给这条加个人？",
+      "clarify_dial": ["low", "high"],
+      "guardrails": ["should_accept", "his_kpi_options"]
+    },
+    {
+      "id": "ball_return",
+      "name": "把球送回去（应对同事踢皮球，§6 第 10 条）",
+      "when": ["relay"],
+      "product_form": "皮球判定器 + 前置要求话术",
+      "example": "这个我可以评估——但我需要你先给我范围和原始数据，没有前置我没法判断它和现有承诺的冲突。你先把这两样补上，我再给你一个带前提的评估？",
+      "clarify_dial": ["low", "high"],
+      "guardrails": ["anti_kick", "written_receipt"]
+    }
+  ],
+
+  "guardrails": {
+    "should_accept": {
+      "desc": "该接就接过滤器（§6.7），命中任一即建议接",
+      "signs": ["高价值", "成长型", "老板亲抓", "团队关键路径"],
+      "action": "走 accept_pretty，不进入拒绝流程"
+    },
+    "attribution": {
+      "desc": "归因外置（§4.2）：拒方案不拒人",
+      "rules": ["永远拒绝‘方案/时间/依赖/风险’，不拒绝‘人’", "把决策权与责任交还给提出者"]
+    },
+    "redline": {
+      "desc": "红线检测（§4.3）——用户草稿若命中即需改写",
+      "forbidden": ["质疑对方能力", "直说‘这需求很蠢’", "威胁式表达（不做就怎样）", "情绪化指责"],
+      "ambiguity_check": "补充：检出‘可被误读为答应了/还在考虑/只是抱怨’的措辞 → 强制更明确版"
+    },
+    "clarity": {
+      "desc": "明确性护栏（§6.8）：低损不等于含糊",
+      "recall_test": "发出前自问：对方复述时能否说出‘这事没排给我/延期/需先对齐’？复述不出=拒绝失败",
+      "written_receipt": "口头挡完当天补钉一条结论消息，留痕 + 确定性",
+      "golden_window": "加活当天无对齐记录 → 提醒‘沉默会被默认为答应’",
+      "order": "先明确、后台阶：先给做/不做/何时做的结论，再给理由与替代"
+    },
+    "reject_debt": {
+      "desc": "拒绝债（§6.9）：别把负担转嫁给同事",
+      "predict": "预判结局：挡掉后是消失，还是会有人做？",
+      "three_choices": ["谈判换形态（换时间/范围/资源）", "代价账随拒绝上抛，让领导带信息转派", "给接盘者留避坑交接"],
+      "alliance": "向可能接盘同事同步：这活我挡是因为 X；你接注意 Y，Z 我可以先帮你搭",
+      "meter": "记录被挡任务去向，转嫁集中同一人时提醒（与信号预警互为镜像）"
+    },
+    "anti_kick": {
+      "desc": "踢皮球双向护栏（§6 第 10 条）：防自己踢 + 防被踢",
+      "costs": ["伤害同事感情", "让用户自己得寸进尺（拒绝零成本被滥用）", "被识破后信誉崩"],
+      "kick_ball_signs": ["无前置", "无信息/无范围", "一句「很快/顺手/临时/简单」推过来", "对方本该自己做"],
+      "self_check": "这活该不该是我/我们团队的？本该接或协作的禁用「挡掉+转派」",
+      "reply": "不接不拒——要求对方先补前置、对齐权责、书面留痕",
+      "profile": "皮球事件记入 person_behavior(kind=kick_ball)，驱动画像与预案"
+    }
+  },
+
+  "clarify_dial": {
+    "desc": "明确度档位（§6.8 按对象调档）",
+    "high_context": {
+      "适用": "高语境/重面子/能 get 暗示的对象",
+      "用法": "可先给台阶与背景，但结论仍需明确给出；允许 mirror_up/agree_then_cost 这类委婉打法",
+      "注意": "即便委婉，也必须以一句明确的结论收尾"
+    },
+    "low_context": {
+      "适用": "低语境/新领导/注意力一般的对象",
+      "用法": "先直接给结论（做/不做/何时做），再给理由；禁用只递暗示、让结论自己浮现的玩法",
+      "注意": "对应 §6 第 3 条适用边界"
+    }
+  },
+
+  "script_fields": {
+    "desc": "C 线话术产物结构（双质检后输出）",
+    "fields": ["text（可念短句，默认安全版）", "version", "holder（对象称呼）", "clarify_dial（明确度档位）", "conclusion（对方应接收到的明确结论）", "recall_test（3 秒复述自检结论）", "redline_report（红线/误读检测报告）", "guardrail_tags（命中的护栏）"]
+  }
+}
