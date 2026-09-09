@@ -2,19 +2,22 @@
   "sources": [
     "v2ex",
     "hn.algolia",
-    "stackexchange/wordplace",
-    "github/issues"
+    "stackexchange/workplace",
+    "github/issues",
+    "bing"
   ],
-  "fetched": 312,
-  "matched": 56,
+  "fetched": 430,
+  "matched": 86,
   "counts": {
     "scope_creep": 34,
     "speak_hard": 9,
-    "quit_signal": 3,
+    "quit_signal": 9,
     "fear": 5,
     "est_cut": 2,
     "oral_add": 4,
-    "kick_ball": 3
+    "kick_ball": 6,
+    "pua": 31,
+    "up_mgmt": 1
   },
   "samples": [
     {
@@ -496,6 +499,588 @@
         "② 范围蔓延没人认账（目标：承诺基线+流水账）"
       ],
       "created": 1446487240
+    },
+    {
+      "id": 40097,
+      "title": "How to estimate tasks scope of which keeps sliding as I keep working on them?",
+      "url": "https://workplace.stackexchange.com/questions/40097/how-to-estimate-tasks-scope-of-which-keeps-sliding-as-i-keep-working-on-them",
+      "tags": [
+        "est_cut"
+      ],
+      "labels": [
+        "③ 估算被砍（目标：保守区间+防反噬口径）"
+      ],
+      "created": 1420672791
+    },
+    {
+      "id": 198888,
+      "title": "How can I push back on my co-worker&#39;s changes that I disagree with?",
+      "url": "https://workplace.stackexchange.com/questions/198888/how-can-i-push-back-on-my-co-workers-changes-that-i-disagree-with",
+      "tags": [
+        "speak_hard"
+      ],
+      "labels": [
+        "④ 开不了口（目标：低损话术+明确性护栏）"
+      ],
+      "created": 1724354695
+    },
+    {
+      "id": 166694,
+      "title": "How do I push back against upper management &quot;innovations&quot; and simple &quot;requests&quot;?",
+      "url": "https://workplace.stackexchange.com/questions/166694/how-do-i-push-back-against-upper-management-innovations-and-simple-requests",
+      "tags": [
+        "speak_hard"
+      ],
+      "labels": [
+        "④ 开不了口（目标：低损话术+明确性护栏）"
+      ],
+      "created": 1605074288
+    },
+    {
+      "id": 4679345748,
+      "title": "在 README.md 顶部的项目简介下方，补充一句话说明：",
+      "url": "https://github.com/larrygogo/autopilot/pull/104",
+      "tags": [
+        "oral_add"
+      ],
+      "labels": [
+        "① 口头加活（目标：代价账+当场/事后挡）"
+      ],
+      "created": "2026-06-17T01:59:06Z"
+    },
+    {
+      "id": 5200642313,
+      "title": "长春至儋州货运专线137-010-64818企业定制物流「2026」需要几天",
+      "url": "https://github.com/yaozhongpeng/project/issues/1393",
+      "tags": [
+        "fear"
+      ],
+      "labels": [
+        "⑤ 怕穿小鞋/背锅（目标：留痕+该接就接+拒绝债）"
+      ],
+      "created": "2026-08-20T07:00:46Z"
+    },
+    {
+      "id": 1795373453,
+      "title": "时代的泪水",
+      "url": "https://github.com/chenshaomou/R11-iOS-SDK/issues/1",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": "2023-07-09T12:09:23Z"
+    },
+    {
+      "id": 1931341889,
+      "title": "软件腐化",
+      "url": "https://github.com/santashen/windsong-comments/issues/391",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": "2023-10-07T12:55:10Z"
+    },
+    {
+      "id": 4124423244,
+      "title": "[GO] QuoteGuard (⭐7.6) — 帮助兼职创业者或小型企业主（尤其是服务型）标准化报价、管理客户期望并礼貌地拒绝免费工作请求。",
+      "url": "https://github.com/simenwater/app-factory/issues/27",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": "2026-03-24T00:11:46Z"
+    },
+    {
+      "id": 1304176744,
+      "title": "南京欣网互联",
+      "url": "https://github.com/zhengzhouqiuzhi/zhengzhouqiuzhi/issues/32",
+      "tags": [
+        "oral_add",
+        "fear",
+        "kick_ball"
+      ],
+      "labels": [
+        "① 口头加活（目标：代价账+当场/事后挡）",
+        "⑤ 怕穿小鞋/背锅（目标：留痕+该接就接+拒绝债）",
+        "⑥ 被踢皮球（目标：皮球判定器+把球送回去）"
+      ],
+      "created": "2022-07-14T02:40:10Z"
+    },
+    {
+      "id": 4141603318,
+      "title": "💡 [for 微信回复焦虑族] AI 微信回复教练 - 从已读不回尴尬到3秒得体回复",
+      "url": "https://github.com/ava-agent/awesome-ai-ideas/issues/185",
+      "tags": [
+        "speak_hard",
+        "kick_ball"
+      ],
+      "labels": [
+        "④ 开不了口（目标：低损话术+明确性护栏）",
+        "⑥ 被踢皮球（目标：皮球判定器+把球送回去）"
+      ],
+      "created": "2026-03-26T08:06:03Z"
+    },
+    {
+      "id": 1552242667,
+      "title": "青岛聚海视讯科技",
+      "url": "https://github.com/QingDaoIT/BlackList/issues/254",
+      "tags": [
+        "kick_ball"
+      ],
+      "labels": [
+        "⑥ 被踢皮球（目标：皮球判定器+把球送回去）"
+      ],
+      "created": "2023-01-22T19:05:09Z"
+    },
+    {
+      "id": 1819467384,
+      "title": "山东华方智联科技股份有限公司（山东叮当云数字科技）闭坑",
+      "url": "https://github.com/QingDaoIT/BlackList/issues/271",
+      "tags": [
+        "fear",
+        "pua"
+      ],
+      "labels": [
+        "⑤ 怕穿小鞋/背锅（目标：留痕+该接就接+拒绝债）",
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2023-07-25T02:59:08Z"
+    },
+    {
+      "id": 600286515,
+      "title": "青岛汇信互联技术有限公司",
+      "url": "https://github.com/QingDaoIT/BlackList/issues/56",
+      "tags": [
+        "fear"
+      ],
+      "labels": [
+        "⑤ 怕穿小鞋/背锅（目标：留痕+该接就接+拒绝债）"
+      ],
+      "created": "2020-04-15T13:11:34Z"
+    },
+    {
+      "id": 3076554312,
+      "title": "毕业两年半，从科韵路run到腾讯（上） | 无境",
+      "url": "https://github.com/Yerenchun/Various-articles/issues/4",
+      "tags": [
+        "oral_add"
+      ],
+      "labels": [
+        "① 口头加活（目标：代价账+当场/事后挡）"
+      ],
+      "created": "2025-05-20T10:42:13Z"
+    },
+    {
+      "id": 3774822239,
+      "title": "[2026-01-01 23:41:43] - V2EX 共 9 条热门话题",
+      "url": "https://github.com/R2DM/v2ex_mofish/issues/173",
+      "tags": [
+        "speak_hard",
+        "quit_signal"
+      ],
+      "labels": [
+        "④ 开不了口（目标：低损话术+明确性护栏）",
+        "⑦ 忍到想辞职（最痛信号）"
+      ],
+      "created": "2026-01-01T15:41:45Z"
+    },
+    {
+      "id": 5323528597,
+      "title": "Preview: 采购单 / 收货 (Receipt) 页面探索",
+      "url": "https://github.com/yidongw/carbon/pull/414",
+      "tags": [
+        "oral_add"
+      ],
+      "labels": [
+        "① 口头加活（目标：代价账+当场/事后挡）"
+      ],
+      "created": "2026-09-02T11:53:32Z"
+    },
+    {
+      "id": 2782242152,
+      "title": "职场PUA",
+      "url": "https://github.com/guanhui07/blog/issues/875",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2025-01-12T02:43:32Z"
+    },
+    {
+      "id": 2001844988,
+      "title": "职场PUA大师",
+      "url": "https://github.com/airyland/gptshunter.com/issues/197",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2023-11-20T10:18:13Z"
+    },
+    {
+      "id": 2001850533,
+      "title": "职场PUA大师",
+      "url": "https://github.com/AI-hubs/GPTs-Store/issues/3",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2023-11-20T10:21:01Z"
+    },
+    {
+      "id": 1080950648,
+      "title": "避免职场PUA",
+      "url": "https://github.com/QingDaoIT/BlackList/issues/145",
+      "tags": [
+        "pua",
+        "quit_signal"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）",
+        "⑦ 忍到想辞职（最痛信号）"
+      ],
+      "created": "2021-12-15T11:56:51Z"
+    },
+    {
+      "id": 4937853793,
+      "title": "狗东西写的恶心屎山",
+      "url": "https://github.com/huangpengkai/fis3-smarty-document/issues/1",
+      "tags": [
+        "kick_ball",
+        "pua"
+      ],
+      "labels": [
+        "⑥ 被踢皮球（目标：皮球判定器+把球送回去）",
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2026-07-21T10:28:35Z"
+    },
+    {
+      "id": 4937806341,
+      "title": "狗东西发的恶心狗玩意",
+      "url": "https://github.com/huangpengkai/test/issues/1",
+      "tags": [
+        "kick_ball",
+        "pua"
+      ],
+      "labels": [
+        "⑥ 被踢皮球（目标：皮球判定器+把球送回去）",
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2026-07-21T10:22:25Z"
+    },
+    {
+      "id": 4937880509,
+      "title": "狗东西拉的一坨臭狗屎",
+      "url": "https://github.com/huangpengkai/cms-wordpress/issues/1",
+      "tags": [
+        "kick_ball",
+        "pua"
+      ],
+      "labels": [
+        "⑥ 被踢皮球（目标：皮球判定器+把球送回去）",
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2026-07-21T10:32:19Z"
+    },
+    {
+      "id": 936413531,
+      "title": "分享一段职场PUA经历",
+      "url": "https://github.com/995icu/996ICU/issues/170",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2021-07-04T09:11:18Z"
+    },
+    {
+      "id": 854075217,
+      "title": "View 事件分发机制，大型职场 PUA 现场",
+      "url": "https://github.com/Flywith24/BlogList/issues/49",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2021-04-09T01:51:30Z"
+    },
+    {
+      "id": 4125477937,
+      "title": "不让 AI 不再摆烂，产出翻倍：揭秘 PUA 插件的\"黑魔法\" | AI安全运营",
+      "url": "https://github.com/shengnoah/lua.ren/issues/79",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2026-03-24T05:59:25Z"
+    },
+    {
+      "id": 3768717649,
+      "title": "【红楼重启 017】贾政视察大观园：一场令人窒息的高管巡店现场",
+      "url": "https://github.com/neverasecond/granthuang999.github.io/issues/187",
+      "tags": [
+        "up_mgmt",
+        "pua"
+      ],
+      "labels": [
+        "⑧ 向上管理相关讨论（目标用户正在学的方法）",
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2025-12-30T01:25:55Z"
+    },
+    {
+      "id": 3705803278,
+      "title": "[爆料] testco - testcity",
+      "url": "https://github.com/CompanyBlacklist/CompanyBlacklist/issues/1",
+      "tags": [
+        "pua",
+        "quit_signal"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）",
+        "⑦ 忍到想辞职（最痛信号）"
+      ],
+      "created": "2025-12-08T10:50:23Z"
+    },
+    {
+      "id": 3705812895,
+      "title": "[爆料] 公司名称 - 城市",
+      "url": "https://github.com/CompanyBlacklist/CompanyBlacklist/issues/2",
+      "tags": [
+        "pua",
+        "quit_signal"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）",
+        "⑦ 忍到想辞职（最痛信号）"
+      ],
+      "created": "2025-12-08T10:52:30Z"
+    },
+    {
+      "id": 1046773463,
+      "title": "跨过这道被职场PUA的坎 | 以写作调身心",
+      "url": "https://github.com/OctopusLian/octopuslian.github.io/issues/347",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2021-11-07T15:19:10Z"
+    },
+    {
+      "id": 1180336746,
+      "title": "青岛超级用户数据科技有限公司",
+      "url": "https://github.com/QingDaoIT/BlackList/issues/160",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2022-03-25T04:38:57Z"
+    },
+    {
+      "id": 3708899076,
+      "title": "[爆料] 名为“组织架构调整”，实为逼人离职，全员被强制要求去邻省办公",
+      "url": "https://github.com/CompanyBlacklist/CompanyBlacklist/issues/7",
+      "tags": [
+        "pua",
+        "quit_signal"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）",
+        "⑦ 忍到想辞职（最痛信号）"
+      ],
+      "created": "2025-12-09T02:40:01Z"
+    },
+    {
+      "id": 3707532070,
+      "title": "[爆料] 测试网络科技有限公司 北京 大厂裁员纠纷",
+      "url": "https://github.com/CompanyBlacklist/CompanyBlacklist/issues/4",
+      "tags": [
+        "pua",
+        "quit_signal"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）",
+        "⑦ 忍到想辞职（最痛信号）"
+      ],
+      "created": "2025-12-08T18:23:48Z"
+    },
+    {
+      "id": 1524854713,
+      "title": "post/to-do-most-important/",
+      "url": "https://github.com/suclogger/hugo-gitment/issues/3",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2023-01-09T03:07:59Z"
+    },
+    {
+      "id": 3707538435,
+      "title": "[爆料] gr个人错误",
+      "url": "https://github.com/CompanyBlacklist/CompanyBlacklist/issues/5",
+      "tags": [
+        "pua",
+        "quit_signal"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）",
+        "⑦ 忍到想辞职（最痛信号）"
+      ],
+      "created": "2025-12-08T18:25:39Z"
+    },
+    {
+      "id": 788848681,
+      "title": "类似看准网的公司点评",
+      "url": "https://github.com/fengT-T/996_list/issues/76",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": "2021-01-19T09:18:23Z"
+    },
+    {
+      "id": "职场PUA#0",
+      "title": "职场PUA_百度百科",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
+    },
+    {
+      "id": "职场PUA#1",
+      "title": "在职场中被PUA的10个信号，中3条赶紧跑：职场操控术全 ...",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
+    },
+    {
+      "id": "职场PUA#2",
+      "title": "职场PUA是什么？ - 知乎",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
+    },
+    {
+      "id": "职场PUA#3",
+      "title": "职场PUA现象严重，如何识别并保护自己？_工作_劳动法_精神",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
+    },
+    {
+      "id": "职场PUA#4",
+      "title": "新型PUA入侵职场：当“企业文化”沦为精神操控的遮羞布",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
+    },
+    {
+      "id": "职场PUA#5",
+      "title": "职场/办公室 PUA 话术与套路大全及自救指南 | 郑天祺的博客",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
+    },
+    {
+      "id": "职场PUA#6",
+      "title": "六成受访白领遭职场PUA，专家：敢于说不，并完善保护机制",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
+    },
+    {
+      "id": "职场PUA#7",
+      "title": "大厂权力上位者，如何看待「职场 PUA」？-36氪",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
+    },
+    {
+      "id": "职场PUA#8",
+      "title": "如果遇到职场 PUA 怎么应对和破解？ - 知乎",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
+    },
+    {
+      "id": "职场PUA#9",
+      "title": "职场PUA - MBA智库百科",
+      "url": "",
+      "tags": [
+        "pua"
+      ],
+      "labels": [
+        "⑨ 职场 PUA（痛感放大器，内容素材）"
+      ],
+      "created": null
     }
   ]
 }
