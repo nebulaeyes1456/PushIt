@@ -1,0 +1,501 @@
+{
+  "sources": [
+    "v2ex",
+    "hn.algolia",
+    "stackexchange/wordplace",
+    "github/issues"
+  ],
+  "fetched": 312,
+  "matched": 56,
+  "counts": {
+    "scope_creep": 34,
+    "speak_hard": 9,
+    "quit_signal": 3,
+    "fear": 5,
+    "est_cut": 2,
+    "oral_add": 4,
+    "kick_ball": 3
+  },
+  "samples": [
+    {
+      "id": "47890799",
+      "title": "Sabotaging projects by overthinking, scope creep, and structural diffing",
+      "url": "https://news.ycombinator.com/item?id=47890799",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1777040932
+    },
+    {
+      "id": "5711197",
+      "title": "Interpol filter scope creep: Australia ordering unilateral website blocks",
+      "url": "https://news.ycombinator.com/item?id=5711197",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1368616529
+    },
+    {
+      "id": "30152847",
+      "title": "Ask HN: How can I help my devs solve “combinatorial test case scope creep”?",
+      "url": "https://news.ycombinator.com/item?id=30152847",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1643656986
+    },
+    {
+      "id": "49479869",
+      "title": "American transit is bad because of scope creep",
+      "url": "https://news.ycombinator.com/item?id=49479869",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1787930379
+    },
+    {
+      "id": "48161610",
+      "title": "Init Hello: A New Apple II Conference (Scope Creep Done Right) – Byte Cellar",
+      "url": "https://news.ycombinator.com/item?id=48161610",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1778948939
+    },
+    {
+      "id": "45800326",
+      "title": "The Scope Creep",
+      "url": "https://news.ycombinator.com/item?id=45800326",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1762184826
+    },
+    {
+      "id": "3188594",
+      "title": "Ask HN: Steve Jobs and scope creep, what can we learn from it?",
+      "url": "https://news.ycombinator.com/item?id=3188594",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1320262876
+    },
+    {
+      "id": "48380952",
+      "title": "Tell HN: AI programming has turned my \"scope creep\" to \"scope leap\"",
+      "url": "https://news.ycombinator.com/item?id=48380952",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1780471197
+    },
+    {
+      "id": "8690925",
+      "title": "The Fine Line Between Scope Creep and Proactivity in Software Development",
+      "url": "https://news.ycombinator.com/item?id=8690925",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1417564136
+    },
+    {
+      "id": "7754624",
+      "title": "Avoiding Scope Creep in Large-Scale Development Projects",
+      "url": "https://news.ycombinator.com/item?id=7754624",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1400233310
+    },
+    {
+      "id": "46374151",
+      "title": "Scope Creep- Why website projects don't finish on time",
+      "url": "https://news.ycombinator.com/item?id=46374151",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1766570231
+    },
+    {
+      "id": "4850875",
+      "title": "My Battle With Scope Creep - Just Say NO",
+      "url": "https://news.ycombinator.com/item?id=4850875",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1354230717
+    },
+    {
+      "id": "48271017",
+      "title": "Init Hello: A New Apple II Conference (Scope Creep Done Right) – Byte Cellar",
+      "url": "https://news.ycombinator.com/item?id=48271017",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1779739403
+    },
+    {
+      "id": "39003630",
+      "title": "Start right before you get eaten by the bear: How to avoid backstory scope creep",
+      "url": "https://news.ycombinator.com/item?id=39003630",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1705340312
+    },
+    {
+      "id": "38913903",
+      "title": "Scope Creep can be creepy for Project's Scope",
+      "url": "https://news.ycombinator.com/item?id=38913903",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1704729743
+    },
+    {
+      "id": "29775177",
+      "title": "How to Price Projects and Manage Scope Creep",
+      "url": "https://news.ycombinator.com/item?id=29775177",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1641165290
+    },
+    {
+      "id": "27328603",
+      "title": "How to prevent scope creep when managing a project from home",
+      "url": "https://news.ycombinator.com/item?id=27328603",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1622325916
+    },
+    {
+      "id": "2392117",
+      "title": "Infinite Scope Creep, The Sales-Development Disconnect",
+      "url": "https://news.ycombinator.com/item?id=2392117",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1301587546
+    },
+    {
+      "id": "20105326",
+      "title": "Avoiding Ticket Scope Creep While Improving Code",
+      "url": "https://news.ycombinator.com/item?id=20105326",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1559748157
+    },
+    {
+      "id": "16687964",
+      "title": "How to Nail Down Project Terms and Avoid Scope Creep",
+      "url": "https://news.ycombinator.com/item?id=16687964",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1522156471
+    },
+    {
+      "id": "13497043",
+      "title": "Managing Project Scope Creep",
+      "url": "https://news.ycombinator.com/item?id=13497043",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1485480921
+    },
+    {
+      "id": "47857029",
+      "title": "MCP Scope Creep Is a Runtime Problem, Not a Prompt Problem",
+      "url": "https://news.ycombinator.com/item?id=47857029",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1776818172
+    },
+    {
+      "id": "45760810",
+      "title": "Stop Losing Money to Scope Creep: How We Keep ~100 Projects on Track",
+      "url": "https://news.ycombinator.com/item?id=45760810",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1761836512
+    },
+    {
+      "id": "22666954",
+      "title": "Ask HN: How to Deal with Agile Card Scope Creep",
+      "url": "https://news.ycombinator.com/item?id=22666954",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1584987491
+    },
+    {
+      "id": "8030809",
+      "title": "Leverage Scope Creep An in-depth tutorial on Angular.js Scope",
+      "url": "https://news.ycombinator.com/item?id=8030809",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1405345009
+    },
+    {
+      "id": "8005082",
+      "title": "Scope creep, a deep dive into Angular's scope",
+      "url": "https://news.ycombinator.com/item?id=8005082",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1404834483
+    },
+    {
+      "id": "7504143",
+      "title": "Attack of the Scope Creep: 3 Ways to Keep the Monster at Bay",
+      "url": "https://news.ycombinator.com/item?id=7504143",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1396299673
+    },
+    {
+      "id": "45906239",
+      "title": "The Scope Creep: An interactive narrative nightmare",
+      "url": "https://news.ycombinator.com/item?id=45906239",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1762979779
+    },
+    {
+      "id": "4037844",
+      "title": "Scope Creep Kills Meaning",
+      "url": "https://news.ycombinator.com/item?id=4037844",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1338304649
+    },
+    {
+      "id": "35974542",
+      "title": "Bosses of failed US banks refuse to hand back millions of dollars in pay",
+      "url": "https://news.ycombinator.com/item?id=35974542",
+      "tags": [
+        "speak_hard"
+      ],
+      "labels": [
+        "④ 开不了口（目标：低损话术+明确性护栏）"
+      ],
+      "created": 1684327863
+    },
+    {
+      "id": "26477249",
+      "title": "FTC lawyers saw a Google monopoly coming. Their bosses refused to sue",
+      "url": "https://news.ycombinator.com/item?id=26477249",
+      "tags": [
+        "speak_hard"
+      ],
+      "labels": [
+        "④ 开不了口（目标：低损话术+明确性护栏）"
+      ],
+      "created": 1615905480
+    },
+    {
+      "id": "29227499",
+      "title": "Your next car may refuse to start if it thinks you've had a drink",
+      "url": "https://news.ycombinator.com/item?id=29227499",
+      "tags": [
+        "speak_hard"
+      ],
+      "labels": [
+        "④ 开不了口（目标：低损话术+明确性护栏）"
+      ],
+      "created": 1636985140
+    },
+    {
+      "id": "24015452",
+      "title": "Arm China CEO has refused to step down after being dismissed by Arm's board",
+      "url": "https://news.ycombinator.com/item?id=24015452",
+      "tags": [
+        "speak_hard"
+      ],
+      "labels": [
+        "④ 开不了口（目标：低损话术+明确性护栏）"
+      ],
+      "created": 1596237461
+    },
+    {
+      "id": "21515457",
+      "title": "Ask HN: Should I Quit the Job?",
+      "url": "https://news.ycombinator.com/item?id=21515457",
+      "tags": [
+        "quit_signal"
+      ],
+      "labels": [
+        "⑦ 忍到想辞职（最痛信号）"
+      ],
+      "created": 1573576768
+    },
+    {
+      "id": "39390692",
+      "title": "Ask HN: Quitting a Toxic Job in a Hurry?",
+      "url": "https://news.ycombinator.com/item?id=39390692",
+      "tags": [
+        "quit_signal"
+      ],
+      "labels": [
+        "⑦ 忍到想辞职（最痛信号）"
+      ],
+      "created": 1708039263
+    },
+    {
+      "id": 199302,
+      "title": "What can I do about a boss who refuses to reply to E-mails?",
+      "url": "https://workplace.stackexchange.com/questions/199302/what-can-i-do-about-a-boss-who-refuses-to-reply-to-e-mails",
+      "tags": [
+        "speak_hard"
+      ],
+      "labels": [
+        "④ 开不了口（目标：低损话术+明确性护栏）"
+      ],
+      "created": 1728045919
+    },
+    {
+      "id": 183949,
+      "title": "How do I communicate to my boss that meeting scope creep is out of control?",
+      "url": "https://workplace.stackexchange.com/questions/183949/how-do-i-communicate-to-my-boss-that-meeting-scope-creep-is-out-of-control",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1649268686
+    },
+    {
+      "id": 150362,
+      "title": "Being blamed for something you don&#39;t consider your mistake",
+      "url": "https://workplace.stackexchange.com/questions/150362/being-blamed-for-something-you-dont-consider-your-mistake",
+      "tags": [
+        "fear"
+      ],
+      "labels": [
+        "⑤ 怕穿小鞋/背锅（目标：留痕+该接就接+拒绝债）"
+      ],
+      "created": 1577263398
+    },
+    {
+      "id": 105965,
+      "title": "Can&#39;t meet deadlines because dev team puts me through the gauntlet before my work can be accepted",
+      "url": "https://workplace.stackexchange.com/questions/105965/cant-meet-deadlines-because-dev-team-puts-me-through-the-gauntlet-before-my-wor",
+      "tags": [
+        "est_cut"
+      ],
+      "labels": [
+        "③ 估算被砍（目标：保守区间+防反噬口径）"
+      ],
+      "created": 1517444974
+    },
+    {
+      "id": 56994,
+      "title": "Manager causing scope creep",
+      "url": "https://workplace.stackexchange.com/questions/56994/manager-causing-scope-creep",
+      "tags": [
+        "scope_creep"
+      ],
+      "labels": [
+        "② 范围蔓延没人认账（目标：承诺基线+流水账）"
+      ],
+      "created": 1446487240
+    }
+  ]
+}
