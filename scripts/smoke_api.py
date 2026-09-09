@@ -5,8 +5,13 @@
   .venv/Scripts/python -m uvicorn backend.main:app --app-dir . --port 8765
 """
 import json
+import os
 import sys
 import urllib.request
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 BASE = "http://127.0.0.1:8765"
 
@@ -20,6 +25,9 @@ def call(method, path, body=None):
 
 
 def main():
+    os.environ["PUSHIT_DEMO"] = "1"
+    import seed_mock
+    seed_mock.main()  # 确保演示种子存在（幂等）
     h = call("GET", "/health")
     assert h["ok"], h
     print("[1/6] health OK, llm configured =", h["llm"])

@@ -25,6 +25,7 @@ def now():
 
 
 def seed(con):
+    """演示种子（仅演示模式注入；正式版空库起步，走 Day 0 引导）。"""
     cur = con.cursor()
     if cur.execute("SELECT COUNT(*) FROM requirement").fetchone()[0] > 0:
         print("[skip] requirement 已有数据，跳过注入（幂等）")
@@ -123,13 +124,17 @@ def migrate(con):
         print("[migrate] " + mig.name + " 执行 OK (user_version -> " + str(idx) + ")")
 
 
-def main():
+def main(demo=None):
+    """demo: 是否注入演示种子；None=读环境变量 PUSHIT_DEMO=1（正式环境默认不注入）。"""
+    if demo is None:
+        demo = os.environ.get("PUSHIT_DEMO") == "1"
     DB.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(DB)
     try:
         migrate(con)
-        seed(con)
-        seed_behavior(con)
+        if demo:
+            seed(con)
+            seed_behavior(con)
         # 自检统计
         for t in ("project", "person", "requirement", "estimate_item", "baseline_item", "change_log", "encounter", "person_behavior"):
             n = con.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]

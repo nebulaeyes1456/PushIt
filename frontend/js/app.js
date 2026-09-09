@@ -34,8 +34,14 @@ var ESC = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, f
 /* ---------- 状态 ---------- */
 var reqs = loadReqs();
 
+function isDemo() {
+  if (new URLSearchParams(location.search).has("demo")) return true;
+  try { return localStorage.getItem("pushit_demo") === "1"; } catch (e) { return false; }
+}
+
 function loadReqs() {
   try { var raw = localStorage.getItem(LS_KEY); if (raw) return JSON.parse(raw); } catch (e) {}
+  if (!isDemo()) return [];  // 正式模式：空台账起步，走 Day 0 引导
   return [
     { id: "A", text: "顺手把报表导出权限也开了，这周一起上", person: "王组长", source: "口头", status: "pending", low: 3, high: 6.6, scale: 1.5, at: "今天 14:20", motivation: "self_achievement" },
     { id: "B", text: "核心迁移预演排进本周，演示会给上面看", person: "赵总", source: "会议", status: "accepted", low: 4, high: 8.8, scale: 2, at: "昨天", motivation: "boss_press" },
@@ -207,11 +213,10 @@ function renderRel() {
   } else { renderPersonRows(localPersonRows()); }
 }
 function localPersonRows() {
-  var handed = reqs.filter(function (x) { return x.handed; }).length;
   return [
-    { n: "王组长", role: "中层", speech: SPEECH_LABEL.plain, kick: 0, note: "重面子 · 被拒后倾向自己收回 · 高语境" },
-    { n: "赵总", role: "大老板", speech: SPEECH_LABEL.formal, kick: 0, note: "看季度结果 · 高语境" },
-    { n: "小李", role: "平级", speech: SPEECH_LABEL.plain, kick: 2, note: "常帮别组转达 · 低语境 · 本地转派 " + handed + " 次" }
+    { n: "王组长", role: "中层", speech: SPEECH_LABEL.unknown, kick: 0 },
+    { n: "赵总", role: "大老板", speech: SPEECH_LABEL.unknown, kick: 0 },
+    { n: "小李", role: "平级", speech: SPEECH_LABEL.unknown, kick: 0 }
   ];
 }
 function renderPersonRows(rows) {
@@ -399,7 +404,7 @@ function sendRehearse() {
       .then(function (r) { return r.json(); })
       .then(function (d) {
         rehearseHistory += "我：" + line + "\n对方：" + d.reply + "\n";
-        appendChat("them", d.reply + (d.mode === "rule" ? "（规则模板）" : ""));
+        appendChat("them", d.reply);
       })
       .catch(function () { var rep = localRehearseReply(pname); rehearseHistory += "我：" + line + "\n对方：" + rep + "\n"; appendChat("them", rep); });
   } else {
@@ -472,6 +477,19 @@ document.addEventListener("DOMContentLoaded", function () {
   $("btn-rehearse").onclick = sendRehearse;
   $("btn-export").onclick = exportData;
   $("btn-wipe").onclick = wipeData;
+  if (isDemo()) { var ex = $("btn-example"); if (ex) ex.classList.remove("hidden"); }
+  var demoBtn = $("btn-demo");
+  if (demoBtn) {
+    demoBtn.textContent = isDemo() ? "退出演示模式（清空演示数据）" : "载入演示数据（体验示例）";
+    demoBtn.onclick = function () {
+      if (isDemo()) {
+        try { localStorage.removeItem("pushit_demo"); localStorage.removeItem(LS_KEY); } catch (e) {}
+      } else {
+        try { localStorage.setItem("pushit_demo", "1"); } catch (e) {}
+      }
+      location.reload();
+    };
+  }
   try {
     var apiInput = $("opt-api-base");
     if (apiInput) apiInput.value = localStorage.getItem("pushit_api_base") || "";

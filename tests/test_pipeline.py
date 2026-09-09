@@ -14,6 +14,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 
 def setUpModule():
+    import os
+    os.environ["PUSHIT_DEMO"] = "1"  # 测试需要演示种子数据
     import seed_mock
     seed_mock.main()  # 幂等：确保迁移与 mock 数据存在
 

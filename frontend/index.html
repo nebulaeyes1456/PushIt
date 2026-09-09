@@ -37,7 +37,7 @@
     </div>
     <div class="row">
       <label class="chk"><input type="checkbox" id="in-auto" checked> 自动判断「该接 or 该拒」</label>
-      <button id="btn-example" type="button" class="ghost">填个例子</button>
+      <button id="btn-example" type="button" class="ghost hidden">填个例子</button>
       <button id="btn-process" type="button" class="primary">处理这件活</button>
     </div>
     <p class="hint" id="hint-line">主入口 = 粘贴消息（§5.0：语音仅私密时刻）；结果按「先明确、后台阶」生成。</p>
@@ -98,7 +98,7 @@
         <input type="text" id="rehearse-line" placeholder="你准备怎么说？">
         <button class="primary" id="btn-rehearse">对方怎么回？</button>
       </div>
-      <p class="hint">先在这练一遍，再上真实战场（§5 机制 6）。无后端/无 key 时用规则模板回应。</p>
+      <p class="hint">先在这练一遍，再上真实战场（§5 机制 6）。未连后端时用本地规则回应。</p>
     </div>
   </section>
 
@@ -121,6 +121,7 @@
         <button id="btn-save-api">保存后端地址</button>
       </div>
       <div class="actions">
+        <button id="btn-demo">载入演示数据（体验示例）</button>
         <button id="btn-summary">生成本周 1:1 摘要</button>
         <button id="btn-export">导出全部数据</button>
         <button id="btn-wipe">清空本地数据</button>
