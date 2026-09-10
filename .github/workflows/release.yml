@@ -45,5 +45,8 @@ jobs:
       - name: 发布 Release
         uses: softprops/action-gh-release@v2
         with:
-          files: PushIt-win64.zip PushIt-mobile.zip
+          # files 必须多行（空格分隔会被当成单个 glob 而匹配失败）
+          files: |
+            PushIt-win64.zip
+            PushIt-mobile.zip
           generate_release_notes: true
