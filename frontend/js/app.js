@@ -589,6 +589,8 @@ document.addEventListener("DOMContentLoaded", function () {
   $("btn-export").onclick = exportData;
   $("btn-wipe").onclick = wipeData;
   if (isDemo()) { var ex = $("btn-example"); if (ex) ex.classList.remove("hidden"); }
+  $("btn-help").onclick = function () { $("help-panel").classList.toggle("hidden"); };
+  $("btn-help-close").onclick = function () { $("help-panel").classList.add("hidden"); };
   $("btn-add-person").onclick = function () { addPersonFlow(); };
   $("ap-ok").onclick = function () { confirmAddPerson(); };
   $("ap-cancel").onclick = function () { $("add-person-form").classList.add("hidden"); };

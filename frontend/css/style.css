@@ -97,3 +97,13 @@ input[type="text"], #rehearse-line { flex:1; min-width:140px; padding:8px;
   font-size:13px; }
 .plan div { padding:3px 0; border-bottom:1px dashed #e3d9bf; }
 .plan div:last-child { border-bottom:none; }
+
+/* 悬浮教程按钮（小、不碍眼） */
+.help-fab { position:fixed; right:12px; bottom:calc(72px + env(safe-area-inset-bottom)); z-index:35;
+  width:30px; height:30px; border-radius:50%; border:1px solid var(--line);
+  background:rgba(255,253,248,.92); color:var(--sub); font-size:14px; line-height:1;
+  cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.12); }
+.help-panel { position:fixed; right:12px; bottom:calc(112px + env(safe-area-inset-bottom)); z-index:36;
+  width:248px; background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:12px; box-shadow:0 4px 14px rgba(0,0,0,.14); font-size:13px; line-height:1.7; }
+.help-panel .actions { margin-top:8px; }
