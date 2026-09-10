@@ -7,9 +7,11 @@ requirement_id -> 需求(人/项目) -> 动机与"该接就接"判定 -> 估算(
 
 运行前提：data/pushit.db 已由 scripts/seed_mock.py 生成（幂等）。
 """
+import json
 import os
 import secrets
 import sqlite3
+from datetime import datetime
 from pathlib import Path
 
 from services.estimate.engine import estimate
@@ -67,9 +69,10 @@ def process(requirement_id, use_llm=False):
                    row["comm_style"] or "low", kick_ball=kick_ball)
     if use_llm:
         from services import llm
-        # 差异化上下文：负载 + 关系记忆（免费话术给不了的输入）
+        # 差异化上下文：负载 + 关系记忆 + 隐形画像（免费话术给不了的输入）
         context = {"weekly_committed": 32, "remaining": 8,
-                   "person_week_count": person_count}
+                   "person_week_count": person_count,
+                   "profile_facts": _profile_facts_of(row["person_id"])}
         enh = llm.enhance_script(dict(row), scr, row["speech_style"] or "unknown", context)
         if enh and enh.get("text"):
             scr = dict(scr)
@@ -173,12 +176,14 @@ def load_view():
 
 
 def persons_view():
-    """提出人画像：基础字段 + 行为日志计数（F 线数据源）。"""
+    """提出人画像：基础字段 + 行为日志计数（F 线数据源）。
+    隐形画像 auto_profile 不出现在返回里——画像只在话术生成后台生效。"""
     con = _con()
     try:
         out = []
         for p in con.execute("SELECT * FROM person ORDER BY rowid").fetchall():
             d = dict(p)
+            d.pop("auto_profile", None)  # 隐形：不向界面暴露
             counts = {}
             for kind in ("kick_ball", "deflect", "reliable", "commit_kept", "hostile"):
                 n = con.execute(
@@ -225,7 +230,8 @@ def changelog_list(requirement_id=None):
 
 
 def export_all():
-    """全量导出（数据主权 §15.2）。"""
+    """全量导出（数据主权 §15.2）。
+    隐私隔离：树洞倾诉内容不混入业务导出（树洞有独立端点可自行导出/清空）。"""
     con = _con()
     try:
         out = {}
@@ -233,6 +239,139 @@ def export_all():
                   "baseline_item", "change_log", "encounter", "person_behavior"):
             out[t] = [dict(r) for r in con.execute("SELECT * FROM " + t).fetchall()]
         return out
+    finally:
+        con.close()
+
+
+# ---------------- 情绪树洞 + 隐形画像（§5 树洞窗口） ----------------
+
+_TREEHOLE_RULES = [
+    "我在听。先把最堵的那件说出来，不用组织语言。",
+    "嗯，这件事听起来确实很消耗人。后来呢？",
+    "被这样对待还压在心里，换谁都会难受。你最气的是哪一点？",
+    "我记下了。你觉得对方当时是有意的，还是没意识到？",
+    "说出来的那一刻，它对你的控制就小了一分。还有别的吗？",
+]
+_TREEHOLE_RULE_I = 0
+_PROFILE_FACT_CAP = 12  # 每人画像事实上限（防无限膨胀）
+
+
+def treehole_post(text, use_llm=True):
+    """树洞：存用户倾诉 → 生成共情回应 → 静默吸收画像。
+    返回 {reply, mode, absorbed}；LLM 不可用/失败时降级本地规则回应。"""
+    if not text or not text.strip():
+        return {"reply": "（空的）说点什么吧，哪怕只是几个词。", "mode": "rule", "absorbed": False}
+    text = text.strip()
+    con = _con()
+    try:
+        con.execute("INSERT INTO treehole_message(id,created_at,role,content) VALUES(?,?,?,?)",
+                    ("t_" + secrets.token_hex(4), datetime.now().isoformat(timespec="seconds"),
+                     "user", text))
+        con.commit()
+        hist = [r["content"] for r in con.execute(
+            "SELECT content FROM treehole_message WHERE role='user' "
+            "ORDER BY rowid DESC LIMIT 6").fetchall()]
+        hist.reverse()
+    finally:
+        con.close()
+
+    reply, mode, absorbed = None, "rule", False
+    if use_llm:
+        from services import llm
+        out = llm.treehole_reply(text, "\n".join(hist[:-1]) if len(hist) > 1 else "")
+        if out and out.get("reply"):
+            reply, mode = out["reply"], "llm"
+            absorbed = _absorb_profile(text)
+    if reply is None:
+        global _TREEHOLE_RULE_I
+        reply = _TREEHOLE_RULES[_TREEHOLE_RULE_I % len(_TREEHOLE_RULES)]
+        _TREEHOLE_RULE_I += 1
+
+    con = _con()
+    try:
+        con.execute("INSERT INTO treehole_message(id,created_at,role,content) VALUES(?,?,?,?)",
+                    ("t_" + secrets.token_hex(4), datetime.now().isoformat(timespec="seconds"),
+                     "assistant", reply))
+        con.commit()
+    finally:
+        con.close()
+    return {"reply": reply, "mode": mode, "absorbed": absorbed}
+
+
+def _absorb_profile(text):
+    """隐形画像吸收：推理模型从倾诉中提取可核实事实，按提及人物追加。
+    情绪化内容不落库——只存结构化事实；失败静默（不打扰树洞体验）。"""
+    from services import llm
+    try:
+        out = llm.extract_profile(text)
+    except Exception:
+        return False
+    if not out:
+        return False
+    name = (out.get("person_name") or "").strip()
+    facts = [str(f).strip() for f in (out.get("facts") or []) if str(f).strip()]
+    if not name or not facts:
+        return False
+    con = _con()
+    try:
+        row = None
+        for p in con.execute("SELECT id,name,auto_profile FROM person").fetchall():
+            pn = (p["name"] or "").strip()
+            if pn and (name in pn or pn in name):
+                row = p
+                break
+        if row is None:
+            return False
+        prof = {}
+        try:
+            prof = json.loads(row["auto_profile"] or "{}")
+        except Exception:
+            prof = {}
+        old = [str(f) for f in prof.get("facts", [])]
+        merged = old + [f for f in facts if f not in old]
+        prof["facts"] = merged[-_PROFILE_FACT_CAP:]
+        prof["updated_at"] = datetime.now().isoformat(timespec="seconds")
+        con.execute("UPDATE person SET auto_profile=? WHERE id=?",
+                    (json.dumps(prof, ensure_ascii=False), row["id"]))
+        con.commit()
+        return True
+    finally:
+        con.close()
+
+
+def _profile_facts_of(person_id):
+    """读取隐形画像事实（仅后台使用，不进任何界面视图）。"""
+    con = _con()
+    try:
+        row = con.execute("SELECT auto_profile FROM person WHERE id=?",
+                          (person_id,)).fetchone()
+        if not row or not row["auto_profile"]:
+            return []
+        prof = json.loads(row["auto_profile"])
+        return [str(f) for f in prof.get("facts", [])]
+    except Exception:
+        return []
+    finally:
+        con.close()
+
+
+def treehole_list():
+    """树洞消息（独立数据，不混入台账导出）。"""
+    con = _con()
+    try:
+        return [dict(r) for r in con.execute(
+            "SELECT id,created_at,role,content FROM treehole_message ORDER BY rowid").fetchall()]
+    finally:
+        con.close()
+
+
+def treehole_clear():
+    """清空树洞（隐私隔离：只删树洞，不影响台账/人物/画像事实）。"""
+    con = _con()
+    try:
+        n = con.execute("DELETE FROM treehole_message").rowcount
+        con.commit()
+        return n
     finally:
         con.close()
 

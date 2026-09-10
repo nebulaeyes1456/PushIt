@@ -1,5 +1,5 @@
 /* PushIt Service Worker：缓存首层静态资源，离线可开（cache-first）。 */
-var CACHE = "pushit-v3";
+var CACHE = "pushit-v4";
 var ASSETS = ["./", "./index.html", "./css/style.css", "./js/app.js", "./manifest.webmanifest"];
 
 self.addEventListener("install", function (e) {

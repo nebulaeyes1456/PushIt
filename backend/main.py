@@ -51,6 +51,11 @@ class RehearseIn(BaseModel):
     history: str = ""
 
 
+class TreeholeIn(BaseModel):
+    text: str
+    use_llm: bool = True
+
+
 @app.get("/health")
 def health():
     return {"ok": True, "llm": llm.available()}
@@ -136,6 +141,23 @@ def rehearse(req: RehearseIn):
     out = pipeline.rehearse_rules(req.person_name, req.role, req.your_line)
     out["mode"] = "rule"
     return out
+
+
+@app.post("/api/v1/treehole")
+def treehole_post(req: TreeholeIn):
+    """情绪树洞：共情回应 + 静默吸收隐形画像。树洞内容与台账物理隔离。"""
+    return pipeline.treehole_post(req.text, use_llm=req.use_llm)
+
+
+@app.get("/api/v1/treehole")
+def treehole_list():
+    return {"messages": pipeline.treehole_list()}
+
+
+@app.delete("/api/v1/treehole")
+def treehole_clear():
+    """清空树洞记录（隐私隔离：不触碰台账/人物/画像事实）。"""
+    return {"cleared": pipeline.treehole_clear()}
 
 
 # 静态托管必须最后挂载，否则会拦截上面的 /api 与 /health 路由

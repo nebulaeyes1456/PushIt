@@ -57,6 +57,7 @@
     <button data-view="load">负载</button>
     <button data-view="rel">关系</button>
     <button data-view="rehearse">预演</button>
+    <button data-view="treehole">树洞</button>
     <button data-view="me">我</button>
   </nav>
 
@@ -89,7 +90,7 @@
     <div class="card">
       <h2>提出人画像</h2>
       <ul class="list" id="person-list"></ul>
-      <p class="hint">画像仅本地、主观笔记（§15）；转嫁计数用于「拒绝债」自监测（§6.9）。</p>
+      <p class="hint">画像由交锋记录与树洞对话自动积累（隐形：不在这里展示结论，只在生成话术时作背景）；转嫁计数用于「拒绝债」自监测（§6.9）。</p>
     </div>
   </section>
 
@@ -105,6 +106,19 @@
         <button class="primary" id="btn-rehearse">对方怎么回？</button>
       </div>
       <p class="hint">先在这练一遍，再上真实战场（§5 机制 6）。未连后端时用本地规则回应。</p>
+    </div>
+  </section>
+
+  <section id="view-treehole" class="view">
+    <div class="card">
+      <h2>情绪树洞 · 只倾听不评判</h2>
+      <div class="chat" id="th-chat"></div>
+      <div class="row">
+        <input type="text" id="th-line" placeholder="最近哪件事让你堵得慌？说出来…">
+        <button class="primary" id="btn-treehole">说给它听</button>
+      </div>
+      <div class="actions"><button id="btn-treehole-clear" class="ghost">清空树洞记录</button></div>
+      <p class="hint">🔒 树洞与台账隔离存储：内容仅存本机；开启「AI 增强」时倾诉会发送给 AI 服务商处理，仅用于倾听回应与悄悄提炼「相处要点」，不展示给任何人。</p>
     </div>
   </section>
 

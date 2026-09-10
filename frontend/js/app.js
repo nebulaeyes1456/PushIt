@@ -372,7 +372,7 @@ function drawCurve(won, debt) {
 
 /* ---------- Tab / 事件 ---------- */
 function switchView(name) {
-  ["ledger", "load", "rel", "rehearse", "me"].forEach(function (v) {
+  ["ledger", "load", "rel", "rehearse", "treehole", "me"].forEach(function (v) {
     $("view-" + v).classList.toggle("on", v === name);
   });
   document.querySelectorAll("#tabs button").forEach(function (b) {
@@ -382,6 +382,7 @@ function switchView(name) {
   if (name === "rel") renderRel();
   if (name === "me") renderMe();
   if (name === "ledger") renderDebtBar();
+  if (name === "treehole") renderTreehole();
 }
 function renderAll() { renderLedger(); renderDebtBar(); renderLoad(); renderRel(); renderMe(); renderDayBar(); }
 function renderDebtBar() {
@@ -545,6 +546,76 @@ function showPlan(name, li) {
   box.classList.remove("hidden");
 }
 
+/* ---------- 情绪树洞（§5 树洞窗口）：倾诉共情 + 隐形画像吸收 ---------- */
+var TH_KEY = "pushit_treehole_v1";   // 树洞独立分仓，与台账/人物隔离
+var TH_RULES = [
+  "我在听。先把最堵的那件说出来，不用组织语言。",
+  "嗯，这件事听起来确实很消耗人。后来呢？",
+  "被这样对待还压在心里，换谁都会难受。你最气的是哪一点？",
+  "我记下了。你觉得对方当时是有意的，还是没意识到？",
+  "说出来的那一刻，它对你的控制就小了一分。还有别的吗？"
+];
+var TH_RULE_I = 0;
+function thLoadLocal() {
+  try { var raw = localStorage.getItem(TH_KEY); if (raw) return JSON.parse(raw); } catch (e) {}
+  return [];
+}
+function thSaveLocal(msgs) { try { localStorage.setItem(TH_KEY, JSON.stringify(msgs)); } catch (e) {} }
+function thAppend(who, text) {
+  var d = document.createElement("div");
+  d.className = "bubble " + who;
+  d.textContent = text;
+  $("th-chat").appendChild(d);
+  $("th-chat").scrollTop = $("th-chat").scrollHeight;
+}
+function renderTreehole() {
+  $("th-chat").innerHTML = "";
+  if (API_BASE) {
+    fetch(API_BASE + "/treehole")
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        (d.messages || []).forEach(function (m) { thAppend(m.role === "user" ? "me" : "them", m.content); });
+        if (!d.messages || !d.messages.length) thAppend("them", "这里只属于你。最近有什么让你憋着难受的？");
+      })
+      .catch(function () { thRenderLocal(); });
+  } else { thRenderLocal(); }
+}
+function thRenderLocal() {
+  var msgs = thLoadLocal();
+  if (!msgs.length) thAppend("them", "这里只属于你。最近有什么让你憋着难受的？");
+  msgs.forEach(function (m) { thAppend(m.role === "user" ? "me" : "them", m.content); });
+}
+function sendTreehole() {
+  var line = $("th-line").value.trim();
+  if (!line) return;
+  thAppend("me", line);
+  $("th-line").value = "";
+  if (API_BASE) {
+    fetch(API_BASE + "/treehole", { method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: line, use_llm: llmOn() }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { thAppend("them", d.reply); })
+      .catch(function () { thAppend("them", TH_RULES[TH_RULE_I++ % TH_RULES.length]); });
+  } else {
+    var msgs = thLoadLocal();
+    msgs.push({ role: "user", content: line });
+    var rep = TH_RULES[TH_RULE_I++ % TH_RULES.length];
+    msgs.push({ role: "assistant", content: rep });
+    thSaveLocal(msgs);
+    thAppend("them", rep);
+  }
+}
+function clearTreehole() {
+  if (!confirm("清空全部树洞记录？只删树洞倾诉，不影响台账与画像积累。")) return;
+  if (API_BASE) {
+    fetch(API_BASE + "/treehole", { method: "DELETE" })
+      .then(function (r) { return r.json(); })
+      .then(function () { $("th-chat").innerHTML = ""; thAppend("them", "树洞已清空。这里只属于你。"); })
+      .catch(function () {});
+  } else { thSaveLocal([]); $("th-chat").innerHTML = ""; thAppend("them", "树洞已清空。这里只属于你。"); }
+}
+
 function exportData() {
   var data = { version: "pushit_reqs_v1", exported_at: new Date().toISOString(), requirements: reqs };
   var json = JSON.stringify(data, null, 2);
@@ -586,6 +657,8 @@ document.addEventListener("DOMContentLoaded", function () {
   $("btn-align").onclick = alignNote;
   $("btn-summary").onclick = summaryNote;
   $("btn-rehearse").onclick = sendRehearse;
+  $("btn-treehole").onclick = sendTreehole;
+  $("btn-treehole-clear").onclick = clearTreehole;
   $("btn-export").onclick = exportData;
   $("btn-wipe").onclick = wipeData;
   if (isDemo()) { var ex = $("btn-example"); if (ex) ex.classList.remove("hidden"); }

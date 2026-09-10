@@ -39,7 +39,7 @@ def available():
     return bool(BASE and KEY)
 
 
-def _chat(messages, model, max_tokens, temperature):
+def _chat(messages, model, max_tokens, temperature, timeout=TIMEOUT):
     body = json.dumps({"model": model, "messages": messages,
                        "max_tokens": max_tokens, "temperature": temperature},
                       ensure_ascii=False).encode("utf-8")
@@ -47,7 +47,7 @@ def _chat(messages, model, max_tokens, temperature):
         BASE + "/chat/completions", data=body,
         headers={"Content-Type": "application/json",
                  "Authorization": "Bearer " + KEY})
-    with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
         data = json.loads(resp.read().decode("utf-8"))
     return data["choices"][0]["message"]["content"]
 
@@ -82,13 +82,14 @@ def fast_json(system, user, max_tokens=300, temperature=0.3):
 
 
 def reason_json(system, user, max_tokens=800, temperature=0.2):
-    """推理层：走推理模型（复杂关系分析/画像）。失败返回 None。"""
+    """推理层：走推理模型（复杂关系分析/画像）。失败返回 None。
+    独立 90s 超时：reasoner 需先推理再作答，30s 会吞掉慢响应。"""
     if not available():
         return None
     try:
         content = _chat([{"role": "system", "content": system},
                          {"role": "user", "content": user}],
-                        MODEL_REASON, max_tokens, temperature)
+                        MODEL_REASON, max_tokens, temperature, timeout=90)
         return _json_from(content)
     except Exception:
         return None
@@ -127,6 +128,10 @@ def enhance_script(requirement, strategy, speech_style="unknown", context=None):
                      c=context.get("weekly_committed", "?"),
                      r=context.get("remaining", "?"),
                      n=context.get("person_week_count", 1))
+        facts = context.get("profile_facts") or []
+        if facts:
+            user += ("\n你对这位提出人的长期观察记录（仅作背景，勿在话术中直白引用或复述）："
+                     + "；".join(str(f) for f in facts))
     return fast_json(_SCRIPT_SYSTEM, user, max_tokens=300)
 
 
@@ -135,6 +140,41 @@ _PROFILE_SYSTEM = (
     "只输出 JSON：{\"summary\": \"一段画像\", \"tendency\": \"kick_ball|reliable|mixed\","
     " \"advice\": \"下次面对此人请求时的应对要点\"}。仅基于给定事件，不臆造。"
 )
+
+
+_TREEHOLE_SYSTEM = (
+    "你是职场人的情绪树洞，一位安静、可靠的倾听者。用户会把憋在心里的职场情绪倒给你。"
+    "规则：1) 先共情，接住情绪，不评判、不说教、不急着给解决方案；"
+    "2) 用平实自然的口语，一次只回 1~2 句（60 字内），以一个问题轻轻引导对方继续说；"
+    "3) 不追问真名、不要求细节，尊重对方想停就停；4) 只输出 JSON：{\"reply\": \"你的回应\"}。"
+)
+
+
+def treehole_reply(text, history=""):
+    """快层：树洞共情回应。失败返回 None（调用方降级本地规则回应）。"""
+    user = "对方倾诉：" + text
+    if history:
+        user += "\n\n最近的对话（供上下文，不要复述）：\n" + history
+    return fast_json(_TREEHOLE_SYSTEM, user, max_tokens=200, temperature=0.7)
+
+
+_PROFILE_EXTRACT_SYSTEM = (
+    "你是职场关系分析师，负责从用户的树洞倾诉中提取「可核实的职场人际事实」。"
+    "只输出 JSON：{\"person_name\": \"这段话涉及的提出人称呼（未涉及具体人物则给空字符串）\","
+    " \"facts\": [\"关于该人的客观、可核实行为事实，每条一句话\"],"
+    " \"advice\": \"一句下次相处建议\"}。"
+    "铁律：1) 情绪、气话、猜测、形容词堆砌都不算事实，只提取具体发生过的事；"
+    "2) 用户没说的不编造；3) 没有可靠事实时 facts 给空数组；"
+    "4) 不输出倾诉原文或任何隐私细节，只输出结构化结论。"
+)
+
+
+def extract_profile(text):
+    """推理层：从树洞倾诉中隐形提取画像事实。失败返回 None。
+    注意 max_tokens 必须留足：reasoner 的推理过程也计入输出预算，400 会导致
+    推理耗尽后 content 为空（实测需 ~1000 才稳定返回 JSON）。"""
+    return reason_json(_PROFILE_EXTRACT_SYSTEM, "树洞倾诉（分析后请勿保留原文）：" + text,
+                       max_tokens=1000, temperature=0.1)
 
 
 def build_profile(person_name, role, events):
