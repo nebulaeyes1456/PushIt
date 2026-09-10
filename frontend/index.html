@@ -56,9 +56,14 @@
   </nav>
 
   <section id="view-ledger" class="view on">
+    <div class="card" id="ledger-head">
+      <div class="item-top"><b>本周工作账本</b><span class="item-meta" id="ledger-range"></span></div>
+      <div class="mini" id="ledger-summary"></div>
+      <div class="mini" style="color:#8a7f6b">🔒 仅保存在本机 · 仅自己可见（§15）</div>
+    </div>
     <div class="debt-bar hidden" id="debt-bar"></div>
     <ul class="list" id="ledger-list"></ul>
-    <p class="empty" id="ledger-empty">还没有记录。贴一条上面的活，点「处理这件活」。</p>
+    <p class="empty" id="ledger-empty">工作账本还是空的——把第一条加活贴进来，开始留痕。</p>
   </section>
 
   <section id="view-load" class="view">
@@ -108,6 +113,7 @@
       <div class="kv"><span>台账记录</span><b id="mem-reqs">–</b></div>
       <div class="kv"><span>交锋/留痕</span><b id="mem-flow">–</b></div>
       <div class="kv"><span>累计赢回</span><b id="mem-won">–</b></div>
+      <div class="kv"><span>被迫承接（妥协账）</span><b id="mem-grudge">–</b></div>
       <p class="hint">免费话术看完即忘；这些是只属于你的记忆与证据链。</p>
     </div>
     <div class="card">
@@ -115,6 +121,7 @@
       <canvas id="curve" width="300" height="90"></canvas>
       <div class="kv"><span>累计赢回（挡掉）</span><b id="me-won">–</b></div>
       <div class="kv"><span>转嫁给同事（欠账）</span><b id="me-debt">–</b></div>
+      <div class="kv"><span>被迫承接（妥协账）</span><b id="me-grudge">–</b></div>
       <div class="kv"><span>净账</span><b id="me-net">–</b></div>
       <p class="hint">只算赢回不算转嫁 = 自我感觉良好（§6.9）。</p>
     </div>

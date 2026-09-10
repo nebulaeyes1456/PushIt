@@ -12,6 +12,8 @@ var API_BASE = (function () {
   try { return localStorage.getItem("pushit_api_base") || "http://127.0.0.1:8765/api/v1"; } catch (e) { return ""; }
 })();
 var PERSON_IDS = { "王组长": "pmid", "赵总": "pboss", "小李": "ppeer" };
+function isDemo() { return new URLSearchParams(location.search).has("demo"); }
+function getKey() { return isDemo() ? "pushit_demo_reqs" : "pushit_reqs_v1"; }
 var PERSONS = {
   "王组长": { role: "中层", motivation: "self_achievement", style: "high", label: "中层要业绩/拍脑袋" },
   "赵总":   { role: "大老板", motivation: "boss_press", style: "high", label: "大老板拍板/中层转压" },
@@ -34,21 +36,16 @@ var ESC = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, f
 /* ---------- 状态 ---------- */
 var reqs = loadReqs();
 
-function isDemo() {
-  if (new URLSearchParams(location.search).has("demo")) return true;
-  try { return localStorage.getItem("pushit_demo") === "1"; } catch (e) { return false; }
-}
-
 function loadReqs() {
-  try { var raw = localStorage.getItem(LS_KEY); if (raw) return JSON.parse(raw); } catch (e) {}
-  if (!isDemo()) return [];  // 正式模式：空台账起步，走 Day 0 引导
+  try { var raw = localStorage.getItem(getKey()); if (raw) return JSON.parse(raw); } catch (e) {}
+  if (!isDemo()) return [];  // 正式模式：空账本起步，走 Day 0 引导
   return [
     { id: "A", text: "顺手把报表导出权限也开了，这周一起上", person: "王组长", source: "口头", status: "pending", low: 3, high: 6.6, scale: 1.5, at: "今天 14:20", motivation: "self_achievement" },
     { id: "B", text: "核心迁移预演排进本周，演示会给上面看", person: "赵总", source: "会议", status: "accepted", low: 4, high: 8.8, scale: 2, at: "昨天", motivation: "boss_press" },
     { id: "C", text: "帮市场部临时拉个经营看板，很快", person: "小李", source: "消息", status: "pending", low: 2, high: 4, scale: 1, at: "今天 09:10", motivation: "relay" }
   ];
 }
-function saveReqs() { try { localStorage.setItem(LS_KEY, JSON.stringify(reqs)); } catch (e) {} }
+function saveReqs() { try { localStorage.setItem(getKey(), JSON.stringify(reqs)); } catch (e) {} }
 function $(id) { return document.getElementById(id); }
 
 /* ---------- mock 引擎：文本 → 处理报告（镜像 backend/services 规则） ---------- */
@@ -119,7 +116,8 @@ function renderReport(r) {
     (r.accept
       ? '<button class="primary" data-do="accept">记入 · 接受（漂亮地接）</button>'
       : '<button class="primary" data-do="decline">挡掉（赢回约 ' + r.low + 'h）</button>' +
-        '<button data-do="park">记入 · 需对齐</button>') +
+        '<button data-do="park">记入 · 需对齐</button>' +
+        '<button class="ghost" data-do="grudge">接吧 · 记妥协账</button>') +
     '<button class="ghost" data-do="copy">复制话术</button><button class="ghost" data-do="share">生成分享卡片</button></div>';
   card.innerHTML = html;
   card.querySelectorAll("[data-do]").forEach(function (b) { b.onclick = function () { onAction(b.getAttribute("data-do"), r); }; });
@@ -141,7 +139,13 @@ function addReq(r) {
 }
 function onAction(doWhat, r) {
   var item;
-  if (doWhat === "accept") { item = addReq(r); item.status = "accepted"; }
+  if (doWhat === "accept") {
+    item = addReq(r); item.status = "accepted";
+    if (!r.accept) { item.grudge = true; showGrudgeCard(item); return; }  // 该拒却接了 → 妥协账
+  } else if (doWhat === "grudge") {
+    item = addReq(r); item.status = "accepted"; item.grudge = true;
+    saveReqs(); renderAll(); showGrudgeCard(item); return;
+  }
   else if (doWhat === "decline" || doWhat === "park") { item = addReq(r); item.status = doWhat === "decline" ? "declined" : "aligned"; }
   else if (doWhat === "copy") { copyText(r.script); return; }
   else if (doWhat === "share") { shareCard(r); return; }
@@ -165,20 +169,46 @@ function showDebtAction(item) {
 function statusBadge(s) { return { pending: "待处理", aligned: "已对齐", accepted: "已接受", declined: "已挡掉" }[s] || s; }
 function badgeClass(s) { return { pending: "pending", aligned: "pending", accepted: "accept", declined: "decline" }[s] || "done"; }
 
+function showGrudgeCard(item) {
+  var n = reqs.filter(function (x) { return x.grudge; }).length;
+  var sum = 0;
+  reqs.forEach(function (x) { if (x.grudge) sum += x.low; });
+  sum = Math.round(sum * 10) / 10;
+  var line;
+  if (n <= 1) {
+    line = "记下了。这件活本可以挡，但既然接了，账本里它就是「妥协账」。这次多背约 " + item.low + " 小时——下次对齐时，这几个小时就是你谈条件的依据。";
+  } else {
+    line = "这是你第 " + n + " 次被迫承接（累计约 " + sum + " 小时）。不劝你了——数据替你记着；1:1 之前点「生成本周摘要」，把负担亮给对方看。";
+  }
+  var card = $("report-card"); card.classList.remove("hidden");
+  card.innerHTML = '<div class="badge pending">已记入妥协账</div>' +
+    '<div class="script" style="background:#f7f3e8">' + ESC(line) + "</div>" +
+    '<div class="actions"><button id="btn-grudge-load">去负载页看累计</button></div>';
+  $("btn-grudge-load").onclick = function () { switchView("load"); };
+}
+
 function renderLedger() {
+  var nNew = reqs.filter(function (x) { return x.status === "pending" || x.status === "aligned"; }).length;
+  var nDecl = reqs.filter(function (x) { return x.status === "declined"; }).length;
+  var nAcc = reqs.filter(function (x) { return x.status === "accepted"; }).length;
+  var now = new Date();
+  $("ledger-range").textContent = "（" + reqs.length + " 条）";
+  $("ledger-summary").textContent = "待处理 " + nNew + " · 已挡 " + nDecl + " · 已接 " + nAcc + "";
   var ul = $("ledger-list"); ul.innerHTML = "";
-  reqs.forEach(function (it) {
+  var total = reqs.length;
+  reqs.forEach(function (it, idx) {
+    var no = total - idx;
     var li = document.createElement("li");
     var act = "";
     if (it.status === "pending" || it.status === "aligned") {
       act = '<div class="actions"><button data-k="accept">接受</button><button data-k="decline">挡掉</button><button data-k="park">需对齐</button></div>';
     } else if (it.status === "declined") {
-      act = '<div class="mini okline">已赢回约 ' + it.low + 'h' + (it.handed ? ' · 已留避坑交接（转派 ' + ESC(it.handed) + "）" : "") + "</div>";
+      act = '<div class="mini okline">已挡掉 · 赢回约 ' + it.low + 'h' + (it.handed ? ' · 已留避坑交接' : '') + "</div>";
     }
     var flow = (it.log || []).slice(-2).map(function (l) { return l.at + " " + l.act; }).join(" · ");
-    li.innerHTML = '<div class="item-top"><span class="badge ' + badgeClass(it.status) + '">' + statusBadge(it.status) + "</span><span class='item-meta'>" + ESC(it.person) + " · " + ESC(it.source) + " · " + ESC(it.at) + "</span></div>" +
+    li.innerHTML = '<div class="item-top"><span class="badge ' + badgeClass(it.status) + '">#' + no + " · " + statusBadge(it.status) + "</span><span class='item-meta'>✓ 已留痕 · " + ESC(it.at) + "</span></div>" +
       '<div class="item-text">' + ESC(it.text) + "</div>" +
-      '<div class="mini">估 ' + it.low + " ~ " + it.high + "h · 动机:" + ESC(it.motivation || "") + "</div>" + act +
+      '<div class="mini">' + ESC(it.person) + " · " + ESC(it.source) + (it.grudge ? " · 妥协账" : "") + " · 估 " + it.low + " ~ " + it.high + "h</div>" + act +
       (flow ? '<div class="mini" style="color:#8a7f6b">流水：' + ESC(flow) + "</div>" : "");
     li.querySelectorAll("[data-k]").forEach(function (b) { b.onclick = function () { changeStatus(it.id, b.getAttribute("data-k")); }; });
     ul.appendChild(li);
@@ -246,15 +276,19 @@ function renderPersonRows(rows) {
 }
 
 function renderMe() {
-  var won = 0, debtN = 0, flowN = 0;
+  var won = 0, debtN = 0, flowN = 0, grudgeN = 0, grudgeSum = 0;
   reqs.forEach(function (it) {
     if (it.status === "declined") won += it.low;
     if (it.handed) debtN += 1;
     flowN += (it.log || []).length;
+    if (it.grudge) { grudgeN += 1; grudgeSum += it.low; }
   });
+  grudgeSum = Math.round(grudgeSum * 10) / 10;
   $("mem-reqs").textContent = reqs.length + " 条";
   $("mem-flow").textContent = flowN + " 次";
   $("mem-won").textContent = "+" + (Math.round(won * 10) / 10) + "h";
+  $("mem-grudge").textContent = grudgeN ? grudgeN + " 件 / " + grudgeSum + "h" : "0";
+  $("me-grudge").textContent = grudgeN ? "+" + grudgeSum + "h（" + grudgeN + " 件）" : "0h";
   var debt = debtN * 6, net = Math.round((won - debt) * 10) / 10;
   won = Math.round(won * 10) / 10;
   $("me-won").textContent = "+" + won + "h";
@@ -465,7 +499,7 @@ function exportData() {
 
 function wipeData() {
   if (!confirm("确定清空本地全部数据？此操作不可恢复。")) return;
-  localStorage.removeItem(LS_KEY);
+  try { localStorage.removeItem("pushit_reqs_v1"); localStorage.removeItem("pushit_demo_reqs"); } catch (e) {}
   reqs = []; saveReqs(); renderAll();
 }
 
@@ -496,14 +530,11 @@ document.addEventListener("DOMContentLoaded", function () {
   if (isDemo()) { var ex = $("btn-example"); if (ex) ex.classList.remove("hidden"); }
   var demoBtn = $("btn-demo");
   if (demoBtn) {
-    demoBtn.textContent = isDemo() ? "退出演示模式（清空演示数据）" : "载入演示数据（体验示例）";
+    demoBtn.textContent = isDemo() ? "退出演示模式" : "载入演示数据（体验示例）";
     demoBtn.onclick = function () {
-      if (isDemo()) {
-        try { localStorage.removeItem("pushit_demo"); localStorage.removeItem(LS_KEY); } catch (e) {}
-      } else {
-        try { localStorage.setItem("pushit_demo", "1"); } catch (e) {}
-      }
-      location.reload();
+      var sep = location.search ? "&" : "?";
+      if (isDemo()) { location.href = location.pathname + location.search.replace(/[&?]demo=1/, ""); }
+      else { location.href = location.pathname + location.search + sep + "demo=1"; }
     };
   }
   try {
