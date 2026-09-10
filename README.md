@@ -24,6 +24,15 @@ scripts/       种子/导入/验收脚本
 tests/         单元与验收测试
 ```
 
+## 下载（最新 v0.1.7，GitHub Releases）
+- 电脑版（Windows exe，解压双击即用）：https://github.com/nebulaeyes1456/PushIt/releases/download/v0.1.7/PushIt-win64.zip
+- 手机版（网页资源包）：https://github.com/nebulaeyes1456/PushIt/releases/download/v0.1.7/PushIt-mobile.zip
+
+### 国内下载加速（GitHub 直连慢/断时用）
+- **手机版稳定直链**（jsDelivr CDN，随仓库自动更新）：https://cdn.jsdelivr.net/gh/nebulaeyes1456/PushIt@main/dist/PushIt-mobile.zip
+- **任意 Release 文件走镜像前缀**（任选其一，实测可用）：`https://ghproxy.net/`、`https://gh-proxy.com/`；用法＝镜像前缀拼原链接，例如：
+  - 电脑版加速：https://ghproxy.net/https://github.com/nebulaeyes1456/PushIt/releases/download/v0.1.7/PushIt-win64.zip
+
 ## 交付物（release/）
 - `PushIt-电脑版-安装包.zip`：解压双击 `PushIt.exe` 即用（内置服务自动开浏览器；数据存 exe 旁 data\；详细见包内安装教程）
 - `PushIt-手机版.zip`：离线演示版（浏览器打开 index.html）；完整手机安装方式见《手机版使用教程》（安卓添加到主屏幕；微信小程序需开发者账号/审核，暂缓）
