@@ -26,14 +26,19 @@
     <h2>这周又加了什么活？</h2>
     <textarea id="in-text" rows="3" placeholder="把领导/同事的话贴进来，例如：顺手把报表导出权限也开了，这周一起上"></textarea>
     <div class="row">
-      <select id="in-person" aria-label="提出人">
-        <option value="王组长|mid|high">王组长（中层）</option>
-        <option value="赵总|boss|high">赵总（大老板）</option>
-        <option value="小李|peer|low">小李（平级转达）</option>
-      </select>
+      <select id="in-person" aria-label="提出人"></select>
+      <button id="btn-add-person" type="button" class="ghost">＋提出人</button>
       <select id="in-source" aria-label="来源">
         <option>口头</option><option>消息</option><option>会议</option><option>1:1</option>
       </select>
+    </div>
+    <div class="row hidden" id="add-person-form">
+      <input type="text" id="ap-name" placeholder="称呼（如 刘经理）">
+      <select id="ap-role">
+        <option>大老板</option><option selected>中层</option><option>平级</option><option>其他</option>
+      </select>
+      <button class="primary" id="ap-ok" type="button">添加</button>
+      <button class="ghost" id="ap-cancel" type="button">取消</button>
     </div>
     <div class="row">
       <label class="chk"><input type="checkbox" id="in-auto" checked> 自动判断「该接 or 该拒」</label>
@@ -92,11 +97,7 @@
     <div class="card">
       <h2>模拟预演 · AI 扮演对方</h2>
       <div class="row">
-        <select id="rehearse-person" aria-label="预演对象">
-          <option>王组长</option>
-          <option>赵总</option>
-          <option>小李</option>
-        </select>
+        <select id="rehearse-person" aria-label="预演对象"></select>
       </div>
       <div class="chat" id="chat-box"></div>
       <div class="row">

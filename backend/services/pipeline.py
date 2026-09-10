@@ -193,6 +193,22 @@ def persons_view():
         con.close()
 
 
+def create_person(data):
+    """新建提出人（画像同源）：{name, role} -> id；role 中文映射英文枚举。"""
+    role_map = {"大老板": "boss", "中层": "mid", "平级": "peer", "其他": "other"}
+    con = _con()
+    try:
+        pid = "p_" + secrets.token_hex(4)
+        con.execute(
+            "INSERT INTO person(id,name,role,comm_style,speech_style) VALUES(?,?,?,?,?)",
+            (pid, data.get("name", ""), role_map.get(data.get("role"), "other"),
+             "low", "unknown"))
+        con.commit()
+        return pid
+    finally:
+        con.close()
+
+
 def changelog_list(requirement_id=None):
     """变更流水账（证据链），可按需求过滤。"""
     con = _con()

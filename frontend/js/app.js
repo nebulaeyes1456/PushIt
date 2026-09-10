@@ -14,6 +14,34 @@ var API_BASE = (function () {
 var PERSON_IDS = { "王组长": "pmid", "赵总": "pboss", "小李": "ppeer" };
 function isDemo() { return new URLSearchParams(location.search).has("demo"); }
 function getKey() { return isDemo() ? "pushit_demo_reqs" : "pushit_reqs_v1"; }
+function getKeyPeople() { return isDemo() ? "pushit_demo_people" : "pushit_people_v1"; }
+var PEOPLE = loadPeople();
+function loadPeople() {
+  try { var raw = localStorage.getItem(getKeyPeople()); if (raw) return JSON.parse(raw); } catch (e) {}
+  return isDemo() ? [
+    { name: "王组长", role: "中层" }, { name: "赵总", role: "大老板" }, { name: "小李", role: "平级" }
+  ] : [];  // 正式模式：提出人由用户自建（与关系画像同源）
+}
+function savePeople() { try { localStorage.setItem(getKeyPeople(), JSON.stringify(PEOPLE)); } catch (e) {} }
+function roleMotivation(role) { return { "大老板": "boss_press", "中层": "self_achievement", "平级": "relay" }[role] || "other"; }
+function roleLabel(role) { return { "大老板": "大老板拍板/中层转压", "中层": "中层要业绩 / 拍脑袋", "平级": "帮同事/别组转达" }[role] || "其他"; }
+function findPerson(name) {
+  for (var i = 0; i < PEOPLE.length; i++) if (PEOPLE[i].name === name) return PEOPLE[i];
+  return null;
+}
+function renderPersonSelects() {
+  var html = "";
+  if (PEOPLE.length === 0) html = '<option value="">（先点“＋提出人”添加）</option>';
+  else PEOPLE.forEach(function (p) { html += '<option value="' + ESC(p.name) + '">' + ESC(p.name) + "（" + ESC(p.role) + "）</option>"; });
+  $("in-person").innerHTML = html;
+  var rp = $("rehearse-person");
+  if (rp) {
+    rp.innerHTML = "";
+    PEOPLE.forEach(function (p) {
+      var o = document.createElement("option"); o.textContent = p.name; rp.appendChild(o);
+    });
+  }
+}
 var PERSONS = {
   "王组长": { role: "中层", motivation: "self_achievement", style: "high", label: "中层要业绩/拍脑袋" },
   "赵总":   { role: "大老板", motivation: "boss_press", style: "high", label: "大老板拍板/中层转压" },
@@ -49,8 +77,33 @@ function saveReqs() { try { localStorage.setItem(getKey(), JSON.stringify(reqs))
 function $(id) { return document.getElementById(id); }
 
 /* ---------- mock 引擎：文本 → 处理报告（镜像 backend/services 规则） ---------- */
+function addPersonFlow() {
+  $("add-person-form").classList.remove("hidden");
+  $("ap-name").focus();
+}
+function confirmAddPerson() {
+  var name = $("ap-name").value.trim();
+  if (!name) return;
+  var role = $("ap-role").value;
+  var p = { name: name, role: role };
+  PEOPLE.push(p); savePeople();
+  if (API_BASE) {
+    fetch(API_BASE + "/persons", { method: "POST",
+      headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, role: role }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { p.id = d.person_id; savePeople(); })
+      .catch(function () {});
+  }
+  $("add-person-form").classList.add("hidden");
+  $("ap-name").value = "";
+  renderPersonSelects();
+  $("in-person").value = name;
+  renderRel();
+}
+
 function mockProcess(text, personName, source) {
-  var p = PERSONS[personName] || { role: "其他", motivation: "other", label: "其他" };
+  var p = findPerson(personName) || PERSONS[personName] || { role: "其他", motivation: "other", label: "其他" };
+  if (!p.motivation) p = { role: p.role, motivation: roleMotivation(p.role), label: roleLabel(p.role) };
   var auto = $("in-auto").checked;
   var accept = auto && ACCEPT_WORDS.test(text);
   // 复杂度/估算（只给保守区间，§8）
@@ -255,14 +308,17 @@ function renderRel() {
   } else { renderPersonRows(localPersonRows()); }
 }
 function localPersonRows() {
-  return [
-    { n: "王组长", role: "中层", speech: SPEECH_LABEL.unknown, kick: 0 },
-    { n: "赵总", role: "大老板", speech: SPEECH_LABEL.unknown, kick: 0 },
-    { n: "小李", role: "平级", speech: SPEECH_LABEL.unknown, kick: 0 }
-  ];
+  if (PEOPLE.length === 0) return [];
+  return PEOPLE.map(function (p) {
+    return { n: p.name, role: p.role, speech: SPEECH_LABEL.unknown, kick: 0 };
+  });
 }
 function renderPersonRows(rows) {
   var list = $("person-list"); list.innerHTML = "";
+  if (!rows || rows.length === 0) {
+    list.innerHTML = '<p class="empty">还没有提出人画像——点输入区“＋提出人”建立第一个人物，交锋记录会慢慢积累成画像。</p>';
+    return;
+  }
   rows.forEach(function (x) {
     var li = document.createElement("li");
     var warn = x.kick >= 2 ? '<div class="mini" style="color:#c53030">⚠ 多次踢皮球：备好「把球送回去」话术（§6.10）</div>' : "";
@@ -342,9 +398,12 @@ function copyText(txt) {
 
 /* ---------- 真后端模式（?api=1）：后端不可用回落本地 mock ---------- */
 function apiProcess(text, personName, source) {
+  var pid = PERSON_IDS[personName];
+  var pp = findPerson(personName);
+  if (pp && pp.id) pid = pp.id;
   fetch(API_BASE + "/requirements", { method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text: text, person_id: PERSON_IDS[personName] || "pmid", source: source }) })
+    body: JSON.stringify({ text: text, person_id: pid || "pmid", source: source }) })
     .then(function (r) { return r.json(); })
     .then(function (d) {
       return fetch(API_BASE + "/requirements/" + d.requirement_id + "/process?use_llm=" + llmOn(),
@@ -443,14 +502,15 @@ function localRehearseReply(pname) {
 }
 function sendRehearse() {
   var pname = $("rehearse-person").value;
-  var roleMap = { "王组长": "中层", "赵总": "大老板", "小李": "平级" };
+  var pp = findPerson(pname);
+  var role = (pp && pp.role) || "中层";
   var line = $("rehearse-line").value.trim();
   if (!line) return;
   appendChat("me", line);
   $("rehearse-line").value = "";
   if (API_BASE) {
     fetch(API_BASE + "/rehearse", { method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ person_name: pname, role: roleMap[pname] || "中层", your_line: line, history: rehearseHistory }) })
+      body: JSON.stringify({ person_name: pname, role: role, your_line: line, history: rehearseHistory }) })
       .then(function (r) { return r.json(); })
       .then(function (d) {
         rehearseHistory += "我：" + line + "\n对方：" + d.reply + "\n";
@@ -510,7 +570,8 @@ document.addEventListener("DOMContentLoaded", function () {
   $("btn-process").onclick = function () {
     var text = $("in-text").value.trim();
     if (!text) { $("hint-line").textContent = "先把话贴进来（口头加活大多落在消息里）。"; return; }
-    var pk = $("in-person").value.split("|")[0];
+    var pk = $("in-person").value;
+    if (!pk) { $("hint-line").textContent = "先点“＋提出人”建立人物，画像与账本都挂在这人身上。"; return; }
     var src = $("in-source").value;
     if (API_BASE) { apiProcess(text, pk, src); return; }
     var r = mockProcess(text, pk, src);
@@ -528,6 +589,10 @@ document.addEventListener("DOMContentLoaded", function () {
   $("btn-export").onclick = exportData;
   $("btn-wipe").onclick = wipeData;
   if (isDemo()) { var ex = $("btn-example"); if (ex) ex.classList.remove("hidden"); }
+  $("btn-add-person").onclick = function () { addPersonFlow(); };
+  $("ap-ok").onclick = function () { confirmAddPerson(); };
+  $("ap-cancel").onclick = function () { $("add-person-form").classList.add("hidden"); };
+  renderPersonSelects();
   var demoBtn = $("btn-demo");
   if (demoBtn) {
     demoBtn.textContent = isDemo() ? "退出演示模式" : "载入演示数据（体验示例）";

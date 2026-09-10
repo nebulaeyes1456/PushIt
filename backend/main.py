@@ -35,6 +35,11 @@ class ResultIn(BaseModel):
     warded_hours: float | None = None
 
 
+class PersonIn(BaseModel):
+    name: str
+    role: str = "中层"
+
+
 class NoteIn(BaseModel):
     use_llm: bool = False
 
@@ -83,6 +88,12 @@ def load():
 @app.get("/api/v1/persons")
 def persons():
     return pipeline.persons_view()
+
+
+@app.post("/api/v1/persons")
+def create_person(req: PersonIn):
+    pid = pipeline.create_person(req.model_dump())
+    return {"person_id": pid}
 
 
 @app.get("/api/v1/changelog")
