@@ -33,12 +33,17 @@ jobs:
       - name: 组装安装包
         shell: pwsh
         run: |
+          # zip 文件名用 ASCII（CI 的 pwsh 会把 workflow 里的中文文件名损坏成点）
           New-Item -ItemType Directory -Force -Path dist-release | Out-Null
           Copy-Item PushIt.exe dist-release\
-          Copy-Item "release\PushIt-电脑版-安装教程.txt" dist-release\
-          Compress-Archive -Path dist-release\* -DestinationPath PushIt-电脑版-安装包.zip
+          Get-ChildItem release -Filter *.txt | Copy-Item -Destination dist-release\
+          Compress-Archive -Path dist-release\* -DestinationPath PushIt-win64.zip
+          New-Item -ItemType Directory -Force -Path dist-mobile | Out-Null
+          Copy-Item frontend dist-mobile\frontend -Recurse
+          Get-ChildItem release -Filter *.txt | Copy-Item -Destination dist-mobile\
+          Compress-Archive -Path dist-mobile\* -DestinationPath PushIt-mobile.zip
       - name: 发布 Release
         uses: softprops/action-gh-release@v2
         with:
-          files: PushIt-电脑版-安装包.zip
+          files: PushIt-win64.zip PushIt-mobile.zip
           generate_release_notes: true
